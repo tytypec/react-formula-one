@@ -14,7 +14,7 @@ class Home extends React.Component{
                 teamTotalPoints: 0,
                 raceResults: [],
                 driverNames: [],
-            },  
+            },
             {
                 name: "Ty's Flyin Tyres",
                 teamTotalPoints: 0,
@@ -34,7 +34,7 @@ class Home extends React.Component{
                 teamTotalPoints: 0,
                 raceResults: [],
                 driverNames: [],
-            },  
+            },
             {
                 name: "First In Our Hearts",
                 teamTotalPoints: 0,
@@ -63,18 +63,18 @@ class Home extends React.Component{
     }
 
     async componentDidMount(){
-        console.log("didmount");
+        // console.log("didmount");
         // console.log("initial state",this.state);
         await this.getDrivers();
         await this.getRaces();
         // console.log("after await BEFORE state", this.state);
         this.setState ({apiUpdated: true})
-        console.log("after state and await", this.state);
+        // console.log("after state and await", this.state);
     }
 
 
-    addRace(race){
-        this.setState(state =>{
+    async addRace(race){
+        await this.setState(state =>{
             const races = state.seasonRaces.concat(race);
             return {
                 seasonRaces: races,
@@ -82,73 +82,72 @@ class Home extends React.Component{
         })
     }
 
-    addDrivers(drivers){
+    async addDrivers(drivers){
         drivers.forEach(driver => {
             if (driver.code === "HUL"){
                 // console.log("REMOVE");
                 drivers.splice(driver, 1);
             }
-            else{    
+            else{
             }
         });
 
-        this.setState({driverInfo: drivers})
-        this.imageLoader();
+        console.log(drivers)
+        this.setState({driverInfo: drivers}, () => {
+            this.imageLoader();
+        })
     }
 
 
     imageLoader(){
-        var imageCount = 0;
-        var drivers = this.state.driverInfo
-        // console.log("LLLLL",drivers);
 
-        for (let i = 0; i < drivers.length; i++){
-            imageCount += 1;
-            const image = new Image();
-            // var url = `./images/items/${drivers[i].code}.png`
-            image.src = `../images/${drivers[i].code}.png`;
+        console.log('start imageLoader');
+        console.log(this.state.driverInfo)
 
-            // image.onload = () => {
-            //     imageCount += 1;
-            //     console.log("image count up");
-            //     if(imageCount === 20){
-            //         console.log('images are loaded! Great Job!');
-            //         // this.setState ({canvasLoaded: true})
-            //         // this.setState ({imagesLoaded: true})
-            //     }
-            // };
-            
-            drivers.forEach(name => {
-                // console.log(name.code);
-                name.imageURL = image.src;
+        // console.log('blup');
+        // var copy = [...this.state.driverInfo];
+        // copy.forEach((driver, i) => {
+        //     // const image = new Image();
+        //     // image.src = `../images/${driver.code}.png`;
+        //     let driverCopy = {...copy[i]};
+        //     driverCopy.imageUrl = `../images/${driver.code}.png`;
+        //     copy[i] = driverCopy;
+        //     console.log(copy);
+        //     // return copy;
+        // });
 
-                if(imageCount === 20){
-                    console.log('ready');
-                    
-                    this.setState ({imagesLoaded: true})
-                }
-                // console.log(name.code);
-                // if(name[19].imgURL){
-                       
-                // }
-            });
-
-            // console.log("images loaded", imageCount);
+        // copy.forEach(e => { console.log(e.imageUrl);})
 
 
+        // this.setState({driverInfo: copy})
+
+        if (!this.state.driverInfo) {
+            console.log('Not updating driver info, no info found.');
+            return
         }
+
+        var out = this.state.driverInfo.map(driver => {
+            driver.imageUrl = require(`../images/${driver.code}.png`);
+            return driver
+        })
+
+        out.forEach(e => { console.log(e.imageUrl);})
+        this.setState({ driverInfo: out })
+
+        console.log('blup');
+        console.log('wizbang');
     }
 
     async getRaces(){
-        this.setState ({apiUpdated: true})  
+        this.setState ({apiUpdated: true})
         for (let m = 10; m <= this.myStuff.amountOfRaces; m++) {
             const raceURL = `http://ergast.com/api/f1/2022/${m}/results.json`
-            
+
             // const raceURL = `http://ergast6.com/api/f1/2022/${m}/results.json` // bad url for tests
             var raceResponse = await fetch(raceURL);
             var fullDetailRace = await raceResponse.json();
             if(!fullDetailRace || fullDetailRace.MRData.RaceTable.Races.length === 0){return}
-            var race = fullDetailRace.MRData.RaceTable.Races[0]; 
+            var race = fullDetailRace.MRData.RaceTable.Races[0];
             // console.log(fullDetailRace);
             // console.log(fullDetailRace.MRData.RaceTable.round);
             if(race){
@@ -157,9 +156,9 @@ class Home extends React.Component{
                 // console.log(race);
             }
         }
-        
-        
-        // console.log(this.state); 
+
+
+        // console.log(this.state);
     }
 
     async getDrivers(){
@@ -174,39 +173,28 @@ class Home extends React.Component{
 
 
     }
-    
-    render() {
-            var poo ="loading"
-            // console.log("outside if", this.state);
-            // // react not re-rendering when array in state gets new value
-            // // each object in any array need to check that key exists.
-            // // console.log(this.state);
-            // const poo = this.state.seasonRaces.map((race) => {
-            //     return <li>{race.round}</li>
-            // })
-        if(this.state.imagesLoaded){
-            // console.log("inside if", this.state);
-            poo = this.state.driverInfo.map((driver) => {
-                // src\images\ALB.png
-                // src={require("./images/items/redX.png")} alt="loading error"/>
-                // var imgURL = "`../images/" + driver.code + ".png`"
-                console.log(driver.imgURL);
-                // return <li>{driver.code} - {driver.familyName} - {driver.imageURL} </li>
-                return <li>{driver.code} - {driver.familyName} - <img src={driver.imgURL} alt="didnt load"/> </li>
-            })
-        }
 
-        const foo = this.myStuff.topTeams.map((team) => { 
-            return <li>{team.name}</li>
+    render() {
+        console.log('from render');
+        var poo;
+        // if (this.state.driversReady) {
+            poo = this.state.driverInfo.map((driver) => {
+            //    return <li>{driver.code} - {driver.familyName} - {driver.imageUrl} </li>
+                var imageSource = driver.imageUrl ? driver.imageUrl : "";
+                return <li>{driver.code} - {driver.familyName} - <img src={imageSource} alt="didnt load"/> </li>
+            })
+        // }
+
+
+        const foo = this.myStuff.topTeams.map((team) => {
+            return <li key="{team.name}">{team.name}</li>
         });
 
         return(
-                
-                // <ul>{foo}</ul>
-                <div>
-                    <img src={require(`../images/LEC.png`)} alt="didnt load"/>
-                    <ul>{poo}</ul>
-                </div>
+            <div>
+                <img src={require(`../images/LEC.png`)} alt="didnt load"/>
+                <ul>{poo}</ul>
+            </div>
         );
 
     }
