@@ -11,7 +11,7 @@ root.render(
   <div>
   <React.StrictMode>
     <Header/>
-    <Home/> 
+    <Home/>
   </React.StrictMode>
     {/* <Home/> */}
   </div>

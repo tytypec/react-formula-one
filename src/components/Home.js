@@ -1,9 +1,9 @@
 import { getAllByDisplayValue } from "@testing-library/react";
 import React from "react";
 
-class Home extends React.Component{
+class Home extends React.Component {
 
-     myStuff = {
+    myStuff = {
         seasonRaces: [],
         amountOfRaces: 23,
         currentRound: 10,
@@ -50,31 +50,24 @@ class Home extends React.Component{
         ],
     };
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             seasonRaces: [],
             driverInfo: [],
-            ready: false,
-            imagesLoaded: false,
-            apiUpdated: false,
             currentRound: 11,
         }
     }
 
-    async componentDidMount(){
-        // console.log("didmount");
-        // console.log("initial state",this.state);
+    async componentDidMount() {
         await this.getDrivers();
         await this.getRaces();
-        // console.log("after await BEFORE state", this.state);
-        this.setState ({apiUpdated: true})
-        // console.log("after state and await", this.state);
+        this.setState({ apiUpdated: true })
     }
 
 
-    async addRace(race){
-        await this.setState(state =>{
+    addRace(race) {
+        this.setState(state => {
             const races = state.seasonRaces.concat(race);
             return {
                 seasonRaces: races,
@@ -82,48 +75,25 @@ class Home extends React.Component{
         })
     }
 
-    async addDrivers(drivers){
+    async addDrivers(drivers) {
         drivers.forEach(driver => {
-            if (driver.code === "HUL"){
+            if (driver.code === "HUL") {
                 // console.log("REMOVE");
                 drivers.splice(driver, 1);
             }
-            else{
+            else {
             }
         });
 
-        console.log(drivers)
-        this.setState({driverInfo: drivers}, () => {
-            this.imageLoader();
-        })
+        this.setState({ driverInfo: drivers });
+        this.imageLoader();
     }
 
 
-    imageLoader(){
-
-        console.log('start imageLoader');
-        console.log(this.state.driverInfo)
-
-        // console.log('blup');
-        // var copy = [...this.state.driverInfo];
-        // copy.forEach((driver, i) => {
-        //     // const image = new Image();
-        //     // image.src = `../images/${driver.code}.png`;
-        //     let driverCopy = {...copy[i]};
-        //     driverCopy.imageUrl = `../images/${driver.code}.png`;
-        //     copy[i] = driverCopy;
-        //     console.log(copy);
-        //     // return copy;
-        // });
-
-        // copy.forEach(e => { console.log(e.imageUrl);})
-
-
-        // this.setState({driverInfo: copy})
-
-        if (!this.state.driverInfo) {
+    imageLoader() {
+        if (!this.state.driverInfo.length) {
             console.log('Not updating driver info, no info found.');
-            return
+            return;
         }
 
         var out = this.state.driverInfo.map(driver => {
@@ -131,26 +101,22 @@ class Home extends React.Component{
             return driver
         })
 
-        out.forEach(e => { console.log(e.imageUrl);})
+        // out.forEach(e => { console.log(e.imageUrl); })
         this.setState({ driverInfo: out })
-
-        console.log('blup');
-        console.log('wizbang');
     }
 
-    async getRaces(){
-        this.setState ({apiUpdated: true})
+    async getRaces() {
         for (let m = 10; m <= this.myStuff.amountOfRaces; m++) {
             const raceURL = `http://ergast.com/api/f1/2022/${m}/results.json`
 
             // const raceURL = `http://ergast6.com/api/f1/2022/${m}/results.json` // bad url for tests
             var raceResponse = await fetch(raceURL);
             var fullDetailRace = await raceResponse.json();
-            if(!fullDetailRace || fullDetailRace.MRData.RaceTable.Races.length === 0){return}
+            if (!fullDetailRace || fullDetailRace.MRData.RaceTable.Races.length === 0) { return }
             var race = fullDetailRace.MRData.RaceTable.Races[0];
             // console.log(fullDetailRace);
             // console.log(fullDetailRace.MRData.RaceTable.round);
-            if(race){
+            if (race) {
                 // this.myStuff.seasonRaces.push(race);
                 this.addRace(race)
                 // console.log(race);
@@ -161,13 +127,13 @@ class Home extends React.Component{
         // console.log(this.state);
     }
 
-    async getDrivers(){
+    async getDrivers() {
         const driverURL = `https://ergast.com/api/f1/2022/drivers.json`
         var driverResponse = await fetch(driverURL);
         var fullDriverDetail = await driverResponse.json();
         // console.log("driver deet",fullDriverDetail.MRData.DriverTable.Drivers);
         var drivers = fullDriverDetail.MRData.DriverTable.Drivers;
-        if(drivers){
+        if (drivers) {
             this.addDrivers(drivers);
         }
 
@@ -175,28 +141,18 @@ class Home extends React.Component{
     }
 
     render() {
-        console.log('from render');
-        var poo;
-        // if (this.state.driversReady) {
-            poo = this.state.driverInfo.map((driver) => {
+        var driversAsListItems= this.state.driverInfo.map((driver) => {
             //    return <li>{driver.code} - {driver.familyName} - {driver.imageUrl} </li>
-                var imageSource = driver.imageUrl ? driver.imageUrl : "";
-                return <li>{driver.code} - {driver.familyName} - <img src={imageSource} alt="didnt load"/> </li>
-            })
-        // }
+            var imageSource = driver.imageUrl ? driver.imageUrl : "";
+            return <li key={driver.code}>{driver.code} - {driver.familyName} <br/> <img src={imageSource} alt="didnt load" /> </li>
+        })
 
-
-        const foo = this.myStuff.topTeams.map((team) => {
-            return <li key="{team.name}">{team.name}</li>
-        });
-
-        return(
+        return (
             <div>
-                <img src={require(`../images/LEC.png`)} alt="didnt load"/>
-                <ul>{poo}</ul>
+                <img src={require(`../images/LEC.png`)} alt="didnt load" />
+                <ul>{driversAsListItems}</ul>
             </div>
         );
-
     }
 }
 
