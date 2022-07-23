@@ -62,16 +62,44 @@ class Home extends React.Component {
     async componentDidMount() {
         await this.getDrivers();
         await this.getRaces();
+        this.addRacesToDrivers();
+        console.log(this.state);
+    }
+
+    addRacesToDrivers(){
+        const races = this.state.seasonRaces;
+        const drivers = this.state.driverInfo;
+        races.forEach(race => {
+            // if the race is already been done return
+            console.log(race);
+            race.Results.forEach(result => {
+                drivers.forEach(driver => {
+                    // if(result.Driver.code === driver.code){
+                        // console.log(result);
+                    if(result.Driver.code === driver.code && driver.results.includes(result) === false){
+                        var info = {
+                            circuit: race.Circuit,
+                            result: result,
+                        } 
+                        driver.results.push(info)
+                        // driver.results.result.push(race.Circuit)
+                            
+                    }
+                });
+            });
+        });
+        console.log(this.state);
     }
 
     async getRaces() {
         for (let m = 10; m <= this.myStuff.amountOfRaces; m++) {
             const raceURL = `http://ergast.com/api/f1/2022/${m}/results.json`
-
-            var res = await fetch(raceURL);
-            var resJSON = await res.json();
-            if(!resJSON|| resJSON.MRData.RaceTable.Races.length === 0){return}
-            var races = resJSON.MRData.RaceTable.Races;
+            var raceResponse = await fetch(raceURL);
+            var raceResponse = await raceResponse.json();
+            if(!raceResponse|| raceResponse.MRData.RaceTable.Races.length === 0){return}
+            var races = raceResponse.MRData.RaceTable.Races;
+            
+            if(this.state.seasonRaces.includes(races) === true){return}
             this.setState(function(state) {
                 return { seasonRaces: state.seasonRaces.concat(races) }
             });
@@ -87,6 +115,7 @@ class Home extends React.Component {
         drivers = drivers.reduce((memo, driver) => {
             if (driver.code === "HUL") { return memo;}
             driver.imageUrl = require(`../images/${driver.code}.png`);
+            driver.results = [];
             memo.push(driver)
             return memo;
         }, [])
