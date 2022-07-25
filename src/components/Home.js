@@ -4,6 +4,7 @@ import React from "react";
 class Home extends React.Component {
 
     myStuff = {
+        backendInfo: [],
         seasonRaces: [],
         amountOfRaces: 23,
         currentRound: 10,
@@ -33,19 +34,19 @@ class Home extends React.Component {
                 name: "Dan's Back Up Boys",
                 teamTotalPoints: 0,
                 teamDriverInfo: [],
-                driverCodes: [],
+                driverCodes: ["NOR","VET"],
             },
             {
                 name: "First In Our Hearts",
                 teamTotalPoints: 0,
                 teamDriverInfo: [],
-                driverCodes: [],
+                driverCodes: ["BOT","RIC"],
             },
             {
                 name: "They Made Me Pick Slow People",
                 teamTotalPoints: 0,
                 teamDriverInfo: [],
-                driverCodes: [],
+                driverCodes: ["ALO","TSU"],
             },
         ],
 
@@ -99,25 +100,38 @@ class Home extends React.Component {
             seasonRaces: [],
             driverInfo: [],
             currentRound: 11,
-            teams: [],
+            topTeams: [],
+            bottomTeams: [],
             teamsFetched: false,
         }
     }
 
     async componentDidMount() {
+        // await this.backend();
         await this.getDrivers();
         await this.getRaces();
         this.addRacesToDrivers();
         // this.addQualifyingPoints();
-        this.addDriversToTeams();
-        this.sumTeamPoints();
+        this.addDriversToTeams(this.myStuff.topTeams);
+        this.addDriversToTeams(this.myStuff.bottomTeams);
+        this.sumTeamPoints(this.myStuff.topTeams, this.state.topTeams);
+        this.sumTeamPoints(this.myStuff.bottomTeams, this.state.bottomTeams);
         console.log(this.state);
         console.log(this.myStuff);
     }
     // dictionary python a way to look up information.
     
-    sumTeamPoints(){
-        const teams = this.myStuff.topTeams;
+    backend(){
+        var backendInfo = [];
+        backendInfo.getItems()
+            .then((itemsFromApi) => {
+                this.myStuff.backendInfo = itemsFromApi;
+                // this.setState ({ready: true}) 
+            });
+    }
+
+    sumTeamPoints(teams, stateTeam){
+        // const teams = this.myStuff.topTeams;
 
         teams.forEach(team => {
             var totalPoints = 0;
@@ -128,10 +142,10 @@ class Home extends React.Component {
             });
 
             team.teamTotalPoints = totalPoints;
-            this.state.teams.push(team)
+            stateTeam.push(team)
         });
 
-        if(this.state.teams === undefined || this.state.teams.length == 0){
+        if(stateTeam === undefined || stateTeam.length == 0){
             console.log("Teams NOT Loaded");
         }
         else{
@@ -142,19 +156,19 @@ class Home extends React.Component {
 
     //this function intentionally out of addRacesToDrivers() this should happen on front end
     // and addRacesToDrivers() Should be back end.
-    addDriversToTeams(){
+    addDriversToTeams(team){
         const drivers = this.state.driverInfo;
 
         drivers.forEach(driver => {
-            if(driver.code === this.myStuff.topTeams[0].driverCodes[0] || driver.code === this.myStuff.topTeams[0].driverCodes[1]){
-                this.myStuff.topTeams[0].teamDriverInfo.push(driver);
+            if(driver.code === team[0].driverCodes[0] || driver.code === team[0].driverCodes[1]){
+                team[0].teamDriverInfo.push(driver);
                 // this.myStuff.topTeams[0].driverResults.push(driver)
             }
-            if(driver.code === this.myStuff.topTeams[1].driverCodes[0] || driver.code === this.myStuff.topTeams[1].driverCodes[1]){
-                this.myStuff.topTeams[1].teamDriverInfo.push(driver); 
+            if(driver.code === team[1].driverCodes[0] || driver.code === team[1].driverCodes[1]){
+                team[1].teamDriverInfo.push(driver); 
             }
-            if(driver.code === this.myStuff.topTeams[2].driverCodes[0] || driver.code === this.myStuff.topTeams[2].driverCodes[1]){
-                this.myStuff.topTeams[2].teamDriverInfo.push(driver);
+            if(driver.code === team[2].driverCodes[0] || driver.code === team[2].driverCodes[1]){
+                team[2].teamDriverInfo.push(driver);
             }
         });
     }
@@ -193,11 +207,16 @@ class Home extends React.Component {
                         // console.log(driver.code, parseInt(result.weekendPoints));
                     }
                     var totalPoints = 0;
+                    var construction = "";
 
                     driver.results.forEach(result => {
                         totalPoints += result.result.weekendPoints;
+                        construction = driver.results[0].result.Constructor.name;
+                        // console.log(driver.results[0].result.Constructor.name);  
                     })
                     driver.seasonPoints = totalPoints;
+                    
+                    driver.construction = construction;
                 });
             });
         });
@@ -239,16 +258,21 @@ class Home extends React.Component {
 
         var driversAsListItems= this.state.driverInfo.map((driver) => {
             var imageSource = driver.imageUrl ? driver.imageUrl : "";
-            return <li key={driver.code}>{driver.code} - {driver.familyName} <br/> <img src={imageSource} alt="didnt load" />
+            return <li key={driver.code}>{driver.code} - {driver.givenName} {driver.familyName} <br/>{driver.permanentNumber} - {driver.construction} <br/> <img src={imageSource} alt="didnt load" />
              {/* <br/>{driver.results[0].result.Constructor.name} */}
              </li>
              
         })
 
         // console.log("team", this.state.teams.name);
-        var teamScores = this.state.teams.map((team) => {  
+        var topTeamScores = this.state.topTeams.map((team) => {  
             // var teamName = team.name ? team.name : "";
-            return <tr> <td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
+            return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
+        })
+
+        var bottomTeamScores = this.myStuff.bottomTeams.map((team) => {  
+            // var teamName = team.name ? team.name : "";
+            return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
         })
         
         return (
@@ -263,7 +287,21 @@ class Home extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {teamScores}
+                        {topTeamScores}
+                    </tbody>
+                    </table>
+                </div>
+                <div className="bottomTeamsTable">
+                    <div>Bottom Constructors Score</div>
+                    <table>
+                    <thead>
+                        <tr>
+                        <th>Team</th>
+                        <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {bottomTeamScores}
                     </tbody>
                     </table>
                 </div>
