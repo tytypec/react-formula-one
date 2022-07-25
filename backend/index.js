@@ -7,7 +7,7 @@ import {fileURLToPath} from 'url';
 import { log } from "console";
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -89,7 +89,11 @@ async function getDrivers() {
 }
 
 function sendInfo(){
-    app.get(myStuff, (req, res) => {
+    app.get('/myStuff', (req, res) => {
         res.json(myStuff);
       });
 }
+
+app.listen(port, () => {
+    console.log('Server Listening on port', port);
+  });

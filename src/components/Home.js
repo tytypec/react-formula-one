@@ -1,4 +1,5 @@
-import { getAllByDisplayValue } from "@testing-library/react";
+import { getAllByDisplayValue, getAllByPlaceholderText } from "@testing-library/react";
+import axios from 'axios';
 import React from "react";
 
 class Home extends React.Component {
@@ -97,6 +98,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            // backendInfo: [],
             seasonRaces: [],
             driverInfo: [],
             currentRound: 11,
@@ -107,7 +109,7 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
-        // await this.backend();
+        await this.backend();
         await this.getDrivers();
         await this.getRaces();
         this.addRacesToDrivers();
@@ -121,13 +123,37 @@ class Home extends React.Component {
     }
     // dictionary python a way to look up information.
     
-    backend(){
-        var backendInfo = [];
-        backendInfo.getItems()
-            .then((itemsFromApi) => {
-                this.myStuff.backendInfo = itemsFromApi;
-                // this.setState ({ready: true}) 
-            });
+    async backend(){
+        var data = [];
+        await getData();
+        // data = await getData();
+        await pushData();
+
+        function getData(){
+            
+            var backendInfo = [];
+            data = axios.get('http://localhost:3001/myStuff')
+            // fetch('http://localhost:3001/myStuff')
+            .then(function (response){
+            //   this.state.backendInfo = response;
+            return response.data
+            })
+            
+        }
+
+        // console.log(data);
+        function pushData(){
+            console.log(data);
+        }
+        
+        // this.setState({backendInfo: data})
+        // this.myStuff.backendInfo = data;  
+        
+        // backendInfo.getItems()
+        //     .then((itemsFromApi) => {
+        //         this.myStuff.backendInfo = itemsFromApi;
+        //         // this.setState ({ready: true}) 
+        //     });
     }
 
     sumTeamPoints(teams, stateTeam){
