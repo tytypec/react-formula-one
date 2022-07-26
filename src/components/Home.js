@@ -5,7 +5,6 @@ import React from "react";
 class Home extends React.Component {
 
     myStuff = {
-        backendInfo: [],
         seasonRaces: [],
         amountOfRaces: 23,
         currentRound: 10,
@@ -98,7 +97,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // backendInfo: [],
+            backendInfo: [],
             seasonRaces: [],
             driverInfo: [],
             currentRound: 11,
@@ -118,42 +117,16 @@ class Home extends React.Component {
         this.addDriversToTeams(this.myStuff.bottomTeams);
         this.sumTeamPoints(this.myStuff.topTeams, this.state.topTeams);
         this.sumTeamPoints(this.myStuff.bottomTeams, this.state.bottomTeams);
-        console.log(this.state);
-        console.log(this.myStuff);
+        console.log("STATE", this.state);
+        console.log("MYSTUFF", this.myStuff);
     }
     // dictionary python a way to look up information.
     
     async backend(){
-        var data = [];
-        await getData();
-        // data = await getData();
-        await pushData();
-
-        function getData(){
-            
-            var backendInfo = [];
-            data = axios.get('http://localhost:3001/myStuff')
-            // fetch('http://localhost:3001/myStuff')
-            .then(function (response){
-            //   this.state.backendInfo = response;
-            return response.data
-            })
-            
-        }
-
-        // console.log(data);
-        function pushData(){
-            console.log(data);
-        }
-        
-        // this.setState({backendInfo: data})
-        // this.myStuff.backendInfo = data;  
-        
-        // backendInfo.getItems()
-        //     .then((itemsFromApi) => {
-        //         this.myStuff.backendInfo = itemsFromApi;
-        //         // this.setState ({ready: true}) 
-        //     });
+        var backendResponse = await fetch('http://localhost:3001/myStuff');
+        var backendData = await backendResponse.json();
+        console.log("backdata", backendData);
+        this.setState ({backendInfo: backendData})
     }
 
     sumTeamPoints(teams, stateTeam){
