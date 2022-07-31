@@ -104,15 +104,13 @@ class Home extends React.Component {
             topTeams: [],
             bottomTeams: [],
             teamsFetched: false,
+            imagesLoaded: false,
         }
     }
 
     async componentDidMount() {
         await this.backend();
-        await this.getDrivers();
-        await this.getRaces();
-        this.addRacesToDrivers();
-        // this.addQualifyingPoints();
+        this.imageLoader(this.state.backendInfo.seasonDrivers);
         this.addDriversToTeams(this.myStuff.topTeams);
         this.addDriversToTeams(this.myStuff.bottomTeams);
         this.sumTeamPoints(this.myStuff.topTeams, this.state.topTeams);
@@ -122,11 +120,36 @@ class Home extends React.Component {
     }
     // dictionary python a way to look up information.
     
+    imageLoader(driverList){
+        var imageCount = 0;
+        
+            
+        
+        driverList.forEach(driver => {
+            const image = new Image();
+            image.src = driver.imageUrl;
+
+            image.onload = () => {
+                imageCount += 1;
+                if(imageCount === this.items.length){
+                    console.log('images are loaded! Great Job!');
+                    this.setState ({imagesLoaded: true})
+                }
+            }
+            driver.image = image;
+            // this.loadedImagesAvailableForSelection.push(image);           
+        });
+        
+        // console.log(this.loadedImagesAvailableForSelection);
+    }
+
     async backend(){
         var backendResponse = await fetch('http://localhost:3001/myStuff');
         var backendData = await backendResponse.json();
-        console.log("backdata", backendData);
-        this.setState ({backendInfo: backendData})
+        // console.log("backdata", backendData);
+        // this.setState ({backendInfo: backendData})
+        this.state.backendInfo = backendData;
+        // console.log("insideAPI",this.state);
     }
 
     sumTeamPoints(teams, stateTeam){
@@ -156,9 +179,10 @@ class Home extends React.Component {
     //this function intentionally out of addRacesToDrivers() this should happen on front end
     // and addRacesToDrivers() Should be back end.
     addDriversToTeams(team){
-        const drivers = this.state.driverInfo;
-
+        const drivers = this.state.backendInfo.seasonDrivers;
+        // console.log(team);
         drivers.forEach(driver => {
+            
             if(driver.code === team[0].driverCodes[0] || driver.code === team[0].driverCodes[1]){
                 team[0].teamDriverInfo.push(driver);
                 // this.myStuff.topTeams[0].driverResults.push(driver)
@@ -172,107 +196,49 @@ class Home extends React.Component {
         });
     }
 
-    // addQualifyingPoints(){
 
-    // }
-
-    addRacesToDrivers(){
-        const races = this.state.seasonRaces;
-        const drivers = this.state.driverInfo;
-        races.forEach(race => {
-            race.Results.forEach(result => {
-                    // checks against scoreSheet to assign qualifying points
-                    this.myStuff.scoreSheet.forEach(position => {
-                        if(parseInt(result.grid) === position.position){
-                            result.qualifyingPoints = position.points;
-                            // var weekendPoints = position.points + result.Results.points;
-                        }
-                        else if(parseInt(result.grid) >= 11 || parseInt(result.grid) === 0 || parseInt(result.grid) === "R"){
-                            result.qualifyingPoints = 0;   
-                        }
-                        // else{
-                        //     result.qualifyingPoints = 0;
-                        // }
-                    });
-                    result.weekendPoints = parseInt(result.points) + result.qualifyingPoints;
-
-                drivers.forEach(driver => {
-                    if(result.Driver.code === driver.code && driver.results.includes(result) === false){
-                        var info = {
-                            circuit: race.Circuit,
-                            result: result,
-                        } 
-                        driver.results.push(info)
-                        // console.log(driver.code, parseInt(result.weekendPoints));
-                    }
-                    var totalPoints = 0;
-                    var construction = "";
-
-                    driver.results.forEach(result => {
-                        totalPoints += result.result.weekendPoints;
-                        construction = driver.results[0].result.Constructor.name;
-                        // console.log(driver.results[0].result.Constructor.name);  
-                    })
-                    driver.seasonPoints = totalPoints;
-                    
-                    driver.construction = construction;
-                });
-            });
-        });
-    }
-
-    async getRaces() {
-        for (let m = 10; m <= this.myStuff.amountOfRaces; m++) {
-            const raceURL = `http://ergast.com/api/f1/2022/${m}/results.json`
-            var raceResponse = await fetch(raceURL);
-            var raceResponse = await raceResponse.json();
-            if(!raceResponse|| raceResponse.MRData.RaceTable.Races.length === 0){return}
-            var races = raceResponse.MRData.RaceTable.Races;
-            
-            if(this.state.seasonRaces.includes(races) === true){return}
-            this.setState(function(state) {
-                return { seasonRaces: state.seasonRaces.concat(races) }
-            });
-        }
-    }
-
-    async getDrivers() {
-        const driverURL = `https://ergast.com/api/f1/2022/drivers.json`
-        var driverResponse = await fetch(driverURL);
-        var fullDriverDetail = await driverResponse.json();
-        var drivers = fullDriverDetail.MRData.DriverTable.Drivers;
-
-        drivers = drivers.reduce((memo, driver) => {
-            if (driver.code === "HUL") { return memo;}
-            driver.imageUrl = require(`../images/${driver.code}.png`);
-            driver.results = [];
-            memo.push(driver)
-            return memo;
-        }, [])
-        this.setState({driverInfo: drivers})
-    }
 
     render() {
+        var driversAsListItems = "";
+        var topTeamScores = "";
+        var bottomTeamScores = "";
 
+        if(!this.state.teamsFetched){
+            console.log("Loading");
 
-        var driversAsListItems= this.state.driverInfo.map((driver) => {
-            var imageSource = driver.imageUrl ? driver.imageUrl : "";
-            return <li key={driver.code}>{driver.code} - {driver.givenName} {driver.familyName} <br/>{driver.permanentNumber} - {driver.construction} <br/> <img src={imageSource} alt="didnt load" />
-             {/* <br/>{driver.results[0].result.Constructor.name} */}
-             </li>
-             
-        })
+            driversAsListItems = "Loading...";
+            topTeamScores = "";
+            bottomTeamScores = "";
+
+        }
+        else{
+            console.log('Loading Complete');
+
+            driversAsListItems = this.state.backendInfo.seasonDrivers.map((driver) => {
+                var imageSource = driver.imageUrl ? driver.imageUrl : "";
+                return <li key={driver.code}>{driver.code} - {driver.givenName} {driver.familyName} <br/>{driver.permanentNumber} - {driver.construction} <br/> <img src={imageSource} alt="didnt load" />
+                 {/* <br/>{driver.results[0].result.Constructor.name} */}
+                 </li>
+                 
+            })
+
+            topTeamScores = this.state.topTeams.map((team) => {  
+                // var teamName = team.name ? team.name : "";
+                return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
+            })
+
+            bottomTeamScores = this.myStuff.bottomTeams.map((team) => {  
+                // var teamName = team.name ? team.name : "";
+                return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
+            })
+            
+        }
+
 
         // console.log("team", this.state.teams.name);
-        var topTeamScores = this.state.topTeams.map((team) => {  
-            // var teamName = team.name ? team.name : "";
-            return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
-        })
 
-        var bottomTeamScores = this.myStuff.bottomTeams.map((team) => {  
-            // var teamName = team.name ? team.name : "";
-            return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
-        })
+
+
         
         return (
             <div>

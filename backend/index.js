@@ -87,7 +87,7 @@ main();
 workingFilePaths.forEach((element, index) => {
     // var imageURL = repo.folderPath() + element
     // var imageURL = 'http://localhost:3000/images/items/' + element
-    var imageURL = 'http://localhost:3000/image/' + element
+    var imageURL = 'http://localhost:3001/images/' + element
     // var imageName = element.replace(/\.[^/.]+$/, "");
     var imageName = element.replace(".png", "");
     var thing = {
@@ -160,7 +160,7 @@ async function getDrivers() {
 
     drivers = drivers.reduce((memo, driver) => {
         if (driver.code === "HUL") { return memo;}
-        driver.imageUrl = `http://localhost:3000/image/${driver.code}.png`;
+        driver.imageUrl = `http://localhost:3001/images/${driver.code}.png`;
         driver.results = [];
         memo.push(driver)
         return memo;
