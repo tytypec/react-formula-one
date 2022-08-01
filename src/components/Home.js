@@ -121,10 +121,10 @@ class Home extends React.Component {
     // dictionary python a way to look up information.
     
     imageLoader(driverList){
+        //I dont think this function is needed anymore.
         var imageCount = 0;
         
             
-        
         driverList.forEach(driver => {
             const image = new Image();
             image.src = driver.imageUrl;
@@ -143,6 +143,7 @@ class Home extends React.Component {
         // console.log(this.loadedImagesAvailableForSelection);
     }
 
+
     async backend(){
         var backendResponse = await fetch('http://localhost:3001/myStuff');
         var backendData = await backendResponse.json();
@@ -151,6 +152,7 @@ class Home extends React.Component {
         this.state.backendInfo = backendData;
         // console.log("insideAPI",this.state);
     }
+
 
     sumTeamPoints(teams, stateTeam){
         // const teams = this.myStuff.topTeams;
@@ -175,6 +177,7 @@ class Home extends React.Component {
             this.setState ({teamsFetched: true})
         }
     }
+
 
     //this function intentionally out of addRacesToDrivers() this should happen on front end
     // and addRacesToDrivers() Should be back end.
@@ -202,6 +205,7 @@ class Home extends React.Component {
         var driversAsListItems = "";
         var topTeamScores = "";
         var bottomTeamScores = "";
+        var raceBreakDown = "";
 
         if(!this.state.teamsFetched){
             console.log("Loading");
@@ -209,6 +213,7 @@ class Home extends React.Component {
             driversAsListItems = "Loading...";
             topTeamScores = "";
             bottomTeamScores = "";
+            raceBreakDown = "";
 
         }
         else{
@@ -219,7 +224,7 @@ class Home extends React.Component {
                 var driverRacesStats = driver.results.map((result) => {
                     
                     return (
-                        <tr>
+                        <tr key={result.circuit.circuitName}>
                         <th>{result.circuit.circuitName}</th>
                         <td>{result.result.grid}</td>
                         <td>{result.result.qualifyingPoints}</td>
@@ -245,6 +250,10 @@ class Home extends React.Component {
                     </thead>
                     <tbody>
                         {driverRacesStats}
+                        <tr>
+                            <th rowSpan={2}>total points</th>
+                            <td colSpan={4}>{driver.seasonPoints}</td>
+                        </tr>
                     </tbody>
                     </table>
                  </li>)
@@ -259,6 +268,39 @@ class Home extends React.Component {
             bottomTeamScores = this.myStuff.bottomTeams.map((team) => {  
                 // var teamName = team.name ? team.name : "";
                 return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
+            })
+
+            
+            raceBreakDown = this.state.backendInfo.seasonRaces.map((race) => {
+                var myRace = race.Results.map((result) => {
+                    return(
+                        <tr key={result.Driver.code}>
+                        <th>{result.Driver.code}</th>
+                        <td>{result.position}</td>
+                        <td>{result.points}</td>
+                        <td>{result.grid}</td>
+                        <td>{result.qualifyingPoints}</td>
+                        <td>{result.weekendPoints}</td>
+                        </tr>
+                    )
+                })
+
+
+                // console.log(race);
+                return(
+                <table>
+                        {race.Circuit.circuitName} - {race.Circuit.Location.locality}, {race.Circuit.Location.country}
+                        <tr>
+                            <th>Driver Code</th>
+                            <th>Race Place</th>
+                            <th>Race Points</th>
+                            <th>Grid Position</th>
+                            <th>Qualifying Points</th>
+                            <th>Weekend Points</th>
+                        </tr>
+                        {myRace}
+                </table>
+                )
             })
             
         }
@@ -299,7 +341,13 @@ class Home extends React.Component {
                     </tbody>
                     </table>
                 </div>
-                <ul>{driversAsListItems}</ul>
+                <div className="fullDriverScoreList">
+                    <ul>{driversAsListItems}</ul>
+                </div>
+
+                <div className="raceBreakDown">
+                    {raceBreakDown}
+                </div>
             </div>
         );
     }
