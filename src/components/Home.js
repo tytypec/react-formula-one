@@ -131,7 +131,7 @@ class Home extends React.Component {
 
             image.onload = () => {
                 imageCount += 1;
-                if(imageCount === this.items.length){
+                if(imageCount === this.state.backendInfo.images.length){
                     console.log('images are loaded! Great Job!');
                     this.setState ({imagesLoaded: true})
                 }
@@ -216,9 +216,38 @@ class Home extends React.Component {
 
             driversAsListItems = this.state.backendInfo.seasonDrivers.map((driver) => {
                 var imageSource = driver.imageUrl ? driver.imageUrl : "";
-                return <li key={driver.code}>{driver.code} - {driver.givenName} {driver.familyName} <br/>{driver.permanentNumber} - {driver.construction} <br/> <img src={imageSource} alt="didnt load" />
-                 {/* <br/>{driver.results[0].result.Constructor.name} */}
-                 </li>
+                var driverRacesStats = driver.results.map((result) => {
+                    
+                    return (
+                        <tr>
+                        <th>{result.circuit.circuitName}</th>
+                        <td>{result.result.grid}</td>
+                        <td>{result.result.qualifyingPoints}</td>
+                        <td>{result.result.position}</td>
+                        <td>{result.result.points}</td>
+                        <td>{result.result.weekendPoints}</td>
+                        </tr>
+                    )
+                })
+
+                return (<li key={driver.code}>{driver.code} - {driver.givenName} {driver.familyName} <br/>{driver.permanentNumber} - {driver.construction} <br/> <img src={imageSource} alt="didnt load" />
+                 <br/>
+                 <table>
+                    <thead>
+                        <tr>
+                        <th>Race</th>
+                        <th>Grid Position</th>
+                        <th>Grid Points</th>
+                        <th>Race Position</th>
+                        <th>Race Points</th>
+                        <th>Total Weekend Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {driverRacesStats}
+                    </tbody>
+                    </table>
+                 </li>)
                  
             })
 
@@ -270,7 +299,6 @@ class Home extends React.Component {
                     </tbody>
                     </table>
                 </div>
-                <h1># of Races This Season: {this.state.seasonRaces.length}</h1>
                 <ul>{driversAsListItems}</ul>
             </div>
         );

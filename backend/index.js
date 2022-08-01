@@ -77,7 +77,8 @@ var myStuff = {
 async function main(){
     await getRaces();
     await getDrivers();
-    // console.log(myStuff);
+    // console.log(global.__basedir);
+    // console.log(myImages);
     addRacesToDrivers();
     sendInfo();
 }
@@ -87,7 +88,7 @@ main();
 workingFilePaths.forEach((element, index) => {
     // var imageURL = repo.folderPath() + element
     // var imageURL = 'http://localhost:3000/images/items/' + element
-    var imageURL = 'http://localhost:3001/images/' + element
+    var imageURL = 'http://localhost:3001/image/' + element
     // var imageName = element.replace(/\.[^/.]+$/, "");
     var imageName = element.replace(".png", "");
     var thing = {
@@ -99,9 +100,37 @@ workingFilePaths.forEach((element, index) => {
     // console.log(thing);
   })
 
+  app.get("/images", (req, res) => {
+    res.json(images);
+  });
+  
+  app.get("/image/:imageName", (req, res) => {
+  
+    var options = {
+      root: repo.imageDirectory,
+      dotfiles: 'deny',
+      headers: {
+        'x-timestamp': Date.now(),
+        'x-sent': true
+      }
+    }
+  
+    var fileName = req.params.imageName
+    res.sendFile(fileName, options, function(err){
+      if (err){
+        console.log(err);
+      }
+      else{
+        console.log('sent: ', fileName );
+      }
+    })
+    // console.log(req.params);
+    // res.json(req.params.name);
+  });
+
 
   async function getRaces() {
-    console.log("getRaces");
+    // console.log("getRaces");
     for (let m = 10; m <= myStuff.amountOfRaces; m++) {
         const raceURL = `http://ergast.com/api/f1/2022/${m}/results.json`
         var raceResponse = await fetch(raceURL);
@@ -109,10 +138,10 @@ workingFilePaths.forEach((element, index) => {
         if(!raceJson|| raceJson.MRData.RaceTable.Races.length === 0){return}
         var races = raceJson.MRData.RaceTable.Races;
         // there could be extra data in the array, we want to isolate object.
-        console.log(races);
+        // console.log(races);
         // myStuff.seasonRaces.concat(races);
         myStuff.seasonRaces.push(races[0]);
-        console.log(myStuff.seasonRaces);
+        // console.log(myStuff.seasonRaces);
         // if(this.state.seasonRaces.includes(races) === true){return}
         // this.setState(function(state) {
         //     return { seasonRaces: state.seasonRaces.concat(races) }
@@ -121,7 +150,7 @@ workingFilePaths.forEach((element, index) => {
 }
 
 async function getDrivers() {
-    console.log("inside getDrivers");
+    // console.log("inside getDrivers");
     const driverURL = `https://ergast.com/api/f1/2022/drivers.json`
     var driverResponse = await fetch(driverURL);
     var fullDriverDetail = await driverResponse.json();
@@ -160,7 +189,7 @@ async function getDrivers() {
 
     drivers = drivers.reduce((memo, driver) => {
         if (driver.code === "HUL") { return memo;}
-        driver.imageUrl = `http://localhost:3001/images/${driver.code}.png`;
+        driver.imageUrl = `http://localhost:3001/image/${driver.code}.png`;
         driver.results = [];
         memo.push(driver)
         return memo;
@@ -185,7 +214,7 @@ function addRacesToDrivers(){
     const drivers = myStuff.seasonDrivers;
     // console.log("SEASON RACES", myStuff)
     races.forEach(race => {
-        console.log("RACE",race);
+        // console.log("RACE",race);
         race.Results.forEach(result => {
                 // checks against scoreSheet to assign qualifying points
                 myStuff.scoreSheet.forEach(position => {
