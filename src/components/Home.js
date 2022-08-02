@@ -1,6 +1,7 @@
 import { getAllByDisplayValue, getAllByPlaceholderText } from "@testing-library/react";
 import axios from 'axios';
 import React from "react";
+import 'bulma/css/bulma.min.css';
 
 class Home extends React.Component {
 
@@ -235,24 +236,28 @@ class Home extends React.Component {
                     )
                 })
 
-                return (<li key={driver.code}>{driver.code} - {driver.givenName} {driver.familyName} <br/>{driver.permanentNumber} - {driver.construction} <br/> <img src={imageSource} alt="didnt load" />
-                 <br/>
-                 <table>
+                return (<li class="box block" key={driver.code}>
+                    <div class="columns is-vcentered title is-3">
+                        {driver.code} - {driver.givenName} {driver.familyName} <br/>{driver.permanentNumber} - {driver.construction} <br/> <img src={imageSource} alt="didnt load" />
+                        <br/>
+                    </div>
+                 <table class="table is-narrow is-bordered is-striped is-hoverable">
                     <thead>
                         <tr>
-                        <th>Race</th>
-                        <th>Grid Position</th>
-                        <th>Grid Points</th>
-                        <th>Race Position</th>
-                        <th>Race Points</th>
-                        <th>Total Weekend Points</th>
+                        <th><abbr title="Race">Race</abbr></th>
+                        <th><abbr title="Grid Position">GPos</abbr></th>
+                        <th><abbr title="Grid Points">GPoi</abbr></th>
+                        <th><abbr title="Race Position">RPos</abbr></th>
+                        <th><abbr title="Race Points">RPoi</abbr></th>
+                        <th><abbr title="Total Weekend Points">TWP</abbr></th>
                         </tr>
                     </thead>
                     <tbody>
                         {driverRacesStats}
                         <tr>
                             <th rowSpan={2}>total points</th>
-                            <td colSpan={4}>{driver.seasonPoints}</td>
+                            <td colSpan={1}>{driver.seasonPoints}</td>
+                            <td class="has-background-grey-lighter"colSpan={4}></td>
                         </tr>
                     </tbody>
                     </table>
@@ -288,7 +293,8 @@ class Home extends React.Component {
 
                 // console.log(race);
                 return(
-                <table>
+                    
+                <table class="table is-bordered is-striped is-hoverable">
                         {race.Circuit.circuitName} - {race.Circuit.Location.locality}, {race.Circuit.Location.country}
                         <tr>
                             <th>Driver Code</th>
@@ -312,11 +318,11 @@ class Home extends React.Component {
 
         
         return (
-            <div>
-                <div className="topTeamsTable">
-                    <div>Top Constructors Score</div>
-                    <table>
-                    <thead>
+            <div className="container has-background-white-ter">
+                <div className="box is-flex-direction-column columns is-vcentered">
+                    <div className="title">Top Constructors Score</div>
+                    <table class="table is-bordered is-hoverable">
+                    <thead class="has-background-danger-dark">
                         <tr>
                         <th>Team</th>
                         <th>Score</th>
@@ -327,10 +333,10 @@ class Home extends React.Component {
                     </tbody>
                     </table>
                 </div>
-                <div className="bottomTeamsTable">
-                    <div>Bottom Constructors Score</div>
-                    <table>
-                    <thead>
+                <div className="box is-flex-direction-column columns is-vcentered">
+                    <div className="title">Bottom Constructors Score</div>
+                    <table class="table is-bordered is-hoverable">
+                    <thead class="has-background-danger-dark">
                         <tr>
                         <th>Team</th>
                         <th>Score</th>
@@ -341,7 +347,7 @@ class Home extends React.Component {
                     </tbody>
                     </table>
                 </div>
-                <div className="fullDriverScoreList">
+                <div className="block">
                     <ul>{driversAsListItems}</ul>
                 </div>
 
