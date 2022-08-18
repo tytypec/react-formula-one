@@ -107,6 +107,8 @@ class Home extends React.Component {
             pageClicks: 0,
             teamsFetched: false,
             imagesLoaded: false,
+            driverListCollapsed: true,
+            raceListCollapsed: true,
         }
     }
 
@@ -201,6 +203,16 @@ class Home extends React.Component {
         });
     }
 
+    
+    handleDriverToggle() {
+        console.log("clicked on button");
+        this.setState({ driverListCollapsed: !this.state.driverListCollapsed});
+    }
+    handleRaceToggle() {
+        console.log("clicked on button");
+        this.setState({ raceListCollapsed: !this.state.raceListCollapsed});
+    }
+
 
 
     render() {
@@ -222,61 +234,63 @@ class Home extends React.Component {
         else{
             console.log('Loading Complete');
 
-            driversAsListItems = this.state.backendInfo.seasonDrivers.map((driver) => {
-                var imageSource = driver.imageUrl ? driver.imageUrl : "";
-                var driverRacesStats = driver.results.map((result) => {
-                    
-                    return (
-                        <tr key={result.circuit.circuitName}>
-                        <th>{result.circuit.circuitName}</th>
-                        <td>{result.result.grid}</td>
-                        <td>{result.result.qualifyingPoints}</td>
-                        <td>{result.result.position}</td>
-                        <td>{result.result.points}</td>
-                        <td>{result.result.weekendPoints}</td>
-                        </tr>
-                    )
-                })
+            if(!this.state.driverListCollapsed){
+                driversAsListItems = this.state.backendInfo.seasonDrivers.map((driver) => {
+                    var imageSource = driver.imageUrl ? driver.imageUrl : "";
+                    var driverRacesStats = driver.results.map((result) => {
+                        
+                        return (
+                            <tr key={result.circuit.circuitName}>
+                            <th>{result.circuit.circuitName}</th>
+                            <td>{result.result.grid}</td>
+                            <td>{result.result.qualifyingPoints}</td>
+                            <td>{result.result.position}</td>
+                            <td>{result.result.points}</td>
+                            <td>{result.result.weekendPoints}</td>
+                            </tr>
+                        )
+                    })
 
-                return (<li class="box block" key={driver.code}>
-                    <div class="columns is-vcentered title is-3">
-                        <div class="column has-background-danger-dark">
-                            {driver.code} - {driver.givenName} {driver.familyName} <br/>
-                            {driver.permanentNumber} - {driver.construction}
+                    return (<li class="box block" key={driver.code}>
+                        <div class="columns is-vcentered title is-3">
+                            <div class="column has-background-danger-dark">
+                                {driver.code} - {driver.givenName} {driver.familyName} <br/>
+                                {driver.permanentNumber} - {driver.construction}
+                            </div>
                         </div>
-                    </div>
-                    <div class="columns is-vcentered title is-3">
-                        {/* <div class="column "></div> */}
-                        <div class="column is-full">
-                            <img src={imageSource} alt="didnt load" />
-                        <br/>
+                        <div class="columns is-vcentered title is-3">
+                            {/* <div class="column "></div> */}
+                            <div class="column is-full">
+                                <img src={imageSource} alt="didnt load" />
+                            <br/>
+                            </div>
                         </div>
-                    </div>
-                    <div className="table-container">
-                        <table class="table is-narrow is-bordered is-striped is-hoverable">
-                            <thead>
-                                <tr>
-                                <th><abbr title="Race">Race</abbr></th>
-                                <th><abbr title="Grid Position">GPos</abbr></th>
-                                <th><abbr title="Grid Points">GPts</abbr></th>
-                                <th><abbr title="Race Position">RPos</abbr></th>
-                                <th><abbr title="Race Points">RPts</abbr></th>
-                                <th><abbr title="Total Weekend Points">TWP</abbr></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {driverRacesStats}
-                                <tr>
-                                    <th rowSpan={2}>total points</th>
-                                    <td colSpan={1}>{driver.seasonPoints}</td>
-                                    <td class="has-background-grey-lighter"colSpan={4}></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                 </li>)
-                 
-            })
+                        <div className="table-container">
+                            <table class="table is-narrow is-bordered is-striped is-hoverable">
+                                <thead>
+                                    <tr>
+                                    <th><abbr title="Race">Race</abbr></th>
+                                    <th><abbr title="Grid Position">GPos</abbr></th>
+                                    <th><abbr title="Grid Points">GPts</abbr></th>
+                                    <th><abbr title="Race Position">RPos</abbr></th>
+                                    <th><abbr title="Race Points">RPts</abbr></th>
+                                    <th><abbr title="Total Weekend Points">TWP</abbr></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {driverRacesStats}
+                                    <tr>
+                                        <th rowSpan={2}>total points</th>
+                                        <td colSpan={1}>{driver.seasonPoints}</td>
+                                        <td class="has-background-grey-lighter"colSpan={4}></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>)
+                    
+                })
+            }
 
             topTeamScores = this.state.topTeams.map((team) => {
                 // var teamName = team.name ? team.name : "";
@@ -319,40 +333,41 @@ class Home extends React.Component {
                 return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
             })
 
-            
-            raceBreakDown = this.state.backendInfo.seasonRaces.map((race) => {
-                var myRace = race.Results.map((result) => {
+            if(!this.state.raceListCollapsed){
+                raceBreakDown = this.state.backendInfo.seasonRaces.map((race) => {
+                    var myRace = race.Results.map((result) => {
+                        return(
+                            <tr key={result.Driver.code}>
+                            <th>{result.Driver.code}</th>
+                            <td>{result.position}</td>
+                            <td>{result.points}</td>
+                            <td>{result.grid}</td>
+                            <td>{result.qualifyingPoints}</td>
+                            <td>{result.weekendPoints}</td>
+                            </tr>
+                        )
+                    })
+
+
+                    // console.log(race);
                     return(
-                        <tr key={result.Driver.code}>
-                        <th>{result.Driver.code}</th>
-                        <td>{result.position}</td>
-                        <td>{result.points}</td>
-                        <td>{result.grid}</td>
-                        <td>{result.qualifyingPoints}</td>
-                        <td>{result.weekendPoints}</td>
-                        </tr>
+                    <div className="table-container">   
+                        <table class="table is-bordered is-striped is-hoverable">
+                                {race.Circuit.circuitName} - {race.Circuit.Location.locality}, {race.Circuit.Location.country}
+                                <tr>
+                                    <th>Driver Code</th>
+                                    <th>Race Place</th>
+                                    <th>Race Points</th>
+                                    <th>Grid Position</th>
+                                    <th>Qualifying Points</th>
+                                    <th>Weekend Points</th>
+                                </tr>
+                                {myRace}
+                        </table>
+                    </div>
                     )
                 })
-
-
-                // console.log(race);
-                return(
-                <div className="table-container">   
-                    <table class="table is-bordered is-striped is-hoverable">
-                            {race.Circuit.circuitName} - {race.Circuit.Location.locality}, {race.Circuit.Location.country}
-                            <tr>
-                                <th>Driver Code</th>
-                                <th>Race Place</th>
-                                <th>Race Points</th>
-                                <th>Grid Position</th>
-                                <th>Qualifying Points</th>
-                                <th>Weekend Points</th>
-                            </tr>
-                            {myRace}
-                    </table>
-                </div>
-                )
-            })
+            }
             
         }
 
@@ -394,12 +409,23 @@ class Home extends React.Component {
                     </tbody>
                     </table>
                 </div>
-                <div className="box">
+
+                
                     <div className="box">
-                        <ul>{driversAsListItems}</ul>
+                        <div className="dropdown-trigger">
+                            <button className="button" onClick={() => this.handleDriverToggle()}>
+                            <span>Show Drivers</span>
+                            </button>
+                        </div> 
+                    <ul>{driversAsListItems}</ul>
                     </div>
-                </div>
-                <div className="raceBreakDown">
+                
+                <div className="box">
+                <div className="dropdown-trigger">
+                            <button className="button" onClick={() => this.handleRaceToggle()}>
+                            <span>Show Races</span>
+                            </button>
+                        </div> 
                     {raceBreakDown}
                 </div>
             </div>
