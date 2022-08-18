@@ -104,6 +104,7 @@ class Home extends React.Component {
             currentRound: 11,
             topTeams: [],
             bottomTeams: [],
+            pageClicks: 0,
             teamsFetched: false,
             imagesLoaded: false,
         }
@@ -207,6 +208,7 @@ class Home extends React.Component {
         var topTeamScores = "";
         var bottomTeamScores = "";
         var raceBreakDown = "";
+        var teamInfo = "";
 
         if(!this.state.teamsFetched){
             console.log("Loading");
@@ -238,37 +240,79 @@ class Home extends React.Component {
 
                 return (<li class="box block" key={driver.code}>
                     <div class="columns is-vcentered title is-3">
-                        {driver.code} - {driver.givenName} {driver.familyName} <br/>{driver.permanentNumber} - {driver.construction} <br/> <img src={imageSource} alt="didnt load" />
-                        <br/>
+                        <div class="column has-background-danger-dark">
+                            {driver.code} - {driver.givenName} {driver.familyName} <br/>
+                            {driver.permanentNumber} - {driver.construction}
+                        </div>
                     </div>
-                 <table class="table is-narrow is-bordered is-striped is-hoverable">
-                    <thead>
-                        <tr>
-                        <th><abbr title="Race">Race</abbr></th>
-                        <th><abbr title="Grid Position">GPos</abbr></th>
-                        <th><abbr title="Grid Points">GPoi</abbr></th>
-                        <th><abbr title="Race Position">RPos</abbr></th>
-                        <th><abbr title="Race Points">RPoi</abbr></th>
-                        <th><abbr title="Total Weekend Points">TWP</abbr></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {driverRacesStats}
-                        <tr>
-                            <th rowSpan={2}>total points</th>
-                            <td colSpan={1}>{driver.seasonPoints}</td>
-                            <td class="has-background-grey-lighter"colSpan={4}></td>
-                        </tr>
-                    </tbody>
-                    </table>
+                    <div class="columns is-vcentered title is-3">
+                        {/* <div class="column "></div> */}
+                        <div class="column is-full">
+                            <img src={imageSource} alt="didnt load" />
+                        <br/>
+                        </div>
+                    </div>
+                    <div className="table-container">
+                        <table class="table is-narrow is-bordered is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                <th><abbr title="Race">Race</abbr></th>
+                                <th><abbr title="Grid Position">GPos</abbr></th>
+                                <th><abbr title="Grid Points">GPts</abbr></th>
+                                <th><abbr title="Race Position">RPos</abbr></th>
+                                <th><abbr title="Race Points">RPts</abbr></th>
+                                <th><abbr title="Total Weekend Points">TWP</abbr></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {driverRacesStats}
+                                <tr>
+                                    <th rowSpan={2}>total points</th>
+                                    <td colSpan={1}>{driver.seasonPoints}</td>
+                                    <td class="has-background-grey-lighter"colSpan={4}></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                  </li>)
                  
             })
 
-            topTeamScores = this.state.topTeams.map((team) => {  
+            topTeamScores = this.state.topTeams.map((team) => {
                 // var teamName = team.name ? team.name : "";
-                return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
+                // return( 
+                //     <div class="dropdown is-active">
+                //         <div class="dropdown-trigger">
+                //             <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
+                //         </div>
+                //     </div>  
+                //                 )
+                
+                return( 
+                <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td><td><img src={require("../images/info.png")} onClick={() => {showInfo(team)}} alt="loading error" style={{height:"25px", width:"25px"}} /></td> </tr>
+                // <tr className=""></tr>
+                )
+                
             })
+
+            function showInfo(currentTeam){
+                console.log(currentTeam);
+                // topTeamScores = this.state.topTeams.map((team) => {
+                    // var teamName = team.name ? team.name : "";
+                    // return( 
+                    //     <div class="dropdown is-active">
+                    //         <div class="dropdown-trigger">
+                    //             <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
+                    //         </div>
+                    //     </div>  
+                    //                 )
+                    
+                    // return( 
+                    // <tr key={team.name}><td>hi</td> <td>{team.teamTotalPoints}</td><td><img src={require("../images/info.png")} onClick={() => {showInfo(team)}} alt="loading error" style={{height:"25px", width:"25px"}} /></td> </tr>
+                    // <tr className=""></tr> class={"dropdown" + (this.state.collapsed ? "" : " is-active")}
+                    // )
+                // })
+            };  
 
             bottomTeamScores = this.myStuff.bottomTeams.map((team) => {  
                 // var teamName = team.name ? team.name : "";
@@ -293,19 +337,20 @@ class Home extends React.Component {
 
                 // console.log(race);
                 return(
-                    
-                <table class="table is-bordered is-striped is-hoverable">
-                        {race.Circuit.circuitName} - {race.Circuit.Location.locality}, {race.Circuit.Location.country}
-                        <tr>
-                            <th>Driver Code</th>
-                            <th>Race Place</th>
-                            <th>Race Points</th>
-                            <th>Grid Position</th>
-                            <th>Qualifying Points</th>
-                            <th>Weekend Points</th>
-                        </tr>
-                        {myRace}
-                </table>
+                <div className="table-container">   
+                    <table class="table is-bordered is-striped is-hoverable">
+                            {race.Circuit.circuitName} - {race.Circuit.Location.locality}, {race.Circuit.Location.country}
+                            <tr>
+                                <th>Driver Code</th>
+                                <th>Race Place</th>
+                                <th>Race Points</th>
+                                <th>Grid Position</th>
+                                <th>Qualifying Points</th>
+                                <th>Weekend Points</th>
+                            </tr>
+                            {myRace}
+                    </table>
+                </div>
                 )
             })
             
@@ -318,7 +363,7 @@ class Home extends React.Component {
 
         
         return (
-            <div className="container has-background-white-ter">
+            <div className="container has-background-white-ter is-full has-text-centered">
                 <div className="box is-flex-direction-column columns is-vcentered">
                     <div className="title">Top Constructors Score</div>
                     <table class="table is-bordered is-hoverable">
@@ -326,10 +371,12 @@ class Home extends React.Component {
                         <tr>
                         <th>Team</th>
                         <th>Score</th>
+                        <th>Info</th>
                         </tr>
                     </thead>
                     <tbody>
                         {topTeamScores}
+                        {teamInfo}
                     </tbody>
                     </table>
                 </div>
@@ -347,10 +394,11 @@ class Home extends React.Component {
                     </tbody>
                     </table>
                 </div>
-                <div className="block">
-                    <ul>{driversAsListItems}</ul>
+                <div className="box">
+                    <div className="box">
+                        <ul>{driversAsListItems}</ul>
+                    </div>
                 </div>
-
                 <div className="raceBreakDown">
                     {raceBreakDown}
                 </div>
