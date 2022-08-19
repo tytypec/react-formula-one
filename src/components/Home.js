@@ -111,7 +111,8 @@ class Home extends React.Component {
             raceListCollapsed: true,
             topTeamDisplayCollapsed: true,
             bottomTeamDisplayCollapsed: true,
-            activeTeam: [],
+            activeTopTeam: [],
+            activeBottomTeam: [],
         }
     }
 
@@ -216,18 +217,18 @@ class Home extends React.Component {
         this.setState({ raceListCollapsed: !this.state.raceListCollapsed});
     }
     handleTopDriversToggle(team) {
-        // this.setState({activeTeam: team})
-        this.state.activeTeam = team;
-        if(this.state.activeTeam.length !== 0){
+        // this.setState({activeTopTeam: team})
+        this.state.activeTopTeam = team;
+        if(this.state.activeTopTeam.length !== 0){
         this.setState({ topTeamDisplayCollapsed: !this.state.topTeamDisplayCollapsed});
-        console.log("clicked on button ", this.state.activeTeam);
+        console.log("clicked on button ", this.state.activeTopTeam);
         }
     }
     handleBottomDriversToggle(team){
-        this.state.activeTeam = team;
-        if(this.state.activeTeam.length !== 0){
+        this.state.activeBottomTeam = team;
+        if(this.state.activeBottomTeam.length !== 0){
         this.setState({ bottomTeamDisplayCollapsed: !this.state.bottomTeamDisplayCollapsed});
-        console.log("clicked on button ", this.state.activeTeam);
+        console.log("clicked on button ", this.state.activeBottomTeam);
         }
     }
 
@@ -325,7 +326,7 @@ class Home extends React.Component {
             })
             
             if(!this.state.topTeamDisplayCollapsed){
-                currentTeam = this.state.activeTeam
+                currentTeam = this.state.activeTopTeam
                 currentTeamInfo = currentTeam.teamDriverInfo.map((driver) => {
                     var imageSource = driver.imageUrl ? driver.imageUrl : "";
 
@@ -382,7 +383,7 @@ class Home extends React.Component {
             
                         // 
             if(!this.state.bottomTeamDisplayCollapsed){
-                currentTeam = this.state.activeTeam
+                currentTeam = this.state.activeBottomTeam
                 currentTeamInfo = currentTeam.teamDriverInfo.map((driver) => {
                     var imageSource = driver.imageUrl ? driver.imageUrl : "";
 
