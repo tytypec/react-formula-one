@@ -110,6 +110,7 @@ class Home extends React.Component {
             driverListCollapsed: true,
             raceListCollapsed: true,
             topTeamDisplayCollapsed: true,
+            bottomTeamDisplayCollapsed: true,
             activeTeam: [],
         }
     }
@@ -222,6 +223,13 @@ class Home extends React.Component {
         console.log("clicked on button ", this.state.activeTeam);
         }
     }
+    handleBottomDriversToggle(team){
+        this.state.activeTeam = team;
+        if(this.state.activeTeam.length !== 0){
+        this.setState({ bottomTeamDisplayCollapsed: !this.state.bottomTeamDisplayCollapsed});
+        console.log("clicked on button ", this.state.activeTeam);
+        }
+    }
 
 
 
@@ -231,7 +239,9 @@ class Home extends React.Component {
         var bottomTeamScores = "";
         var raceBreakDown = "";
         var topTeamsInfo = "";
+        var bottomTeamsInfo ="";
         var activeTeamInfo = "";
+        var bottomActiveTeamInfo = "";
         var currentTeamInfo ="";
         var currentTeam = "";
 
@@ -307,19 +317,9 @@ class Home extends React.Component {
 
             
 
-            topTeamScores = this.state.topTeams.map((team) => {
-                // var teamName = team.name ? team.name : "";
-                // return( 
-                //     <div class="dropdown is-active">
-                //         <div class="dropdown-trigger">
-                //             <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
-                //         </div>
-                //     </div>  
-                //                 )
-                
+            topTeamScores = this.state.topTeams.map((team) => {  
                 return( 
                 <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td><td><img src={require("../images/info.png")} onClick={() => {this.handleTopDriversToggle(team)}} alt="loading error" style={{height:"25px", width:"25px"}} /></td> </tr>
-                
                 )
                 
             })
@@ -380,11 +380,68 @@ class Home extends React.Component {
                 {activeTeamInfo}
             </div> 
             
+                        // 
+            if(!this.state.bottomTeamDisplayCollapsed){
+                currentTeam = this.state.activeTeam
+                currentTeamInfo = currentTeam.teamDriverInfo.map((driver) => {
+                    var imageSource = driver.imageUrl ? driver.imageUrl : "";
+
+                    return( 
+
+                    <tr key={driver.code}>
+                        <img src={imageSource} alt="didnt load" />
+                        <th>{driver.familyName}</th>
+                        <th>{driver.construction}</th>
+                        <th>{driver.nationality}</th>
+                        <th>{driver.seasonPoints}</th>
+                    </tr>
+
+                    )
+                })
+
+                bottomActiveTeamInfo =
+                <div className="table-container">
+                <table class="table is-bordered is-hoverable">
+                <thead class="has-background-danger-dark">
+                    <tr>
+                    <th>Image</th>
+                    <th>Driver</th>
+                    <th>Construction</th>
+                    <th>Nationality</th>
+                    <th>Total Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {currentTeamInfo}
+                </tbody>
+            </table>
+            </div>
+            }
 
             bottomTeamScores = this.myStuff.bottomTeams.map((team) => {  
                 // var teamName = team.name ? team.name : "";
-                return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td> </tr>
+                return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td><td><img src={require("../images/info.png")} onClick={() => {this.handleBottomDriversToggle(team)}} alt="loading error" style={{height:"25px", width:"25px"}} /></td> </tr>
             })
+
+            bottomTeamsInfo = 
+            <div className="box is-flex-direction-column columns is-vcentered">
+                <div className="title">Bottom Constructors Score</div>
+                <table class="table is-bordered is-hoverable">
+                <thead class="has-background-danger-dark">
+                    <tr>
+                    <th>Team</th>
+                    <th>Score</th>
+                    <th>Info</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {bottomTeamScores}
+                </tbody>
+                </table>
+                <div className="title">{currentTeam.name}</div>
+                {bottomActiveTeamInfo}
+            </div>
+
 
             if(!this.state.raceListCollapsed){
                 raceBreakDown = this.state.backendInfo.seasonRaces.map((race) => {
@@ -435,20 +492,9 @@ class Home extends React.Component {
                 
                 {topTeamsInfo}
 
-                <div className="box is-flex-direction-column columns is-vcentered">
-                    <div className="title">Bottom Constructors Score</div>
-                    <table class="table is-bordered is-hoverable">
-                    <thead class="has-background-danger-dark">
-                        <tr>
-                        <th>Team</th>
-                        <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {bottomTeamScores}
-                    </tbody>
-                    </table>
-                </div>
+                
+                {bottomTeamsInfo}
+
 
                 
                     <div className="box">
