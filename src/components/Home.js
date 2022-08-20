@@ -2,6 +2,7 @@ import { getAllByDisplayValue, getAllByPlaceholderText } from "@testing-library/
 import axios from 'axios';
 import React from "react";
 import 'bulma/css/bulma.min.css';
+import '../index.css'
 
 class Home extends React.Component {
 
@@ -364,7 +365,7 @@ class Home extends React.Component {
 
             topTeamsInfo = <div className="box is-flex-direction-column columns is-vcentered">
             <div className="title">Top Constructors Score</div>
-                <table class="table is-bordered is-hoverable">
+                <table class="score-board table is-bordered is-hoverable ">
                     <thead class="has-background-danger-dark">
                         <tr>
                         <th>Team</th>
@@ -402,21 +403,21 @@ class Home extends React.Component {
 
                 bottomActiveTeamInfo =
                 <div className="table-container">
-                <table class="table is-bordered is-hoverable">
-                <thead class="has-background-danger-dark">
-                    <tr>
-                    <th>Image</th>
-                    <th>Driver</th>
-                    <th>Construction</th>
-                    <th>Nationality</th>
-                    <th>Total Points</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentTeamInfo}
-                </tbody>
-            </table>
-            </div>
+                    <table class="table is-bordered is-hoverable">
+                        <thead class="has-background-danger-dark">
+                            <tr>
+                                <th>Image</th>
+                                <th>Driver</th>
+                                <th>Construction</th>
+                                <th>Nationality</th>
+                                <th>Total Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentTeamInfo}
+                        </tbody>
+                    </table>
+                </div>
             }
 
             bottomTeamScores = this.myStuff.bottomTeams.map((team) => {  
@@ -425,22 +426,36 @@ class Home extends React.Component {
             })
 
             bottomTeamsInfo = 
-            <div className="box is-flex-direction-column columns is-vcentered">
-                <div className="title">Bottom Constructors Score</div>
-                <table class="table is-bordered is-hoverable">
-                <thead class="has-background-danger-dark">
-                    <tr>
-                    <th>Team</th>
-                    <th>Score</th>
-                    <th>Info</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {bottomTeamScores}
-                </tbody>
-                </table>
-                <div className="title">{currentTeam.name}</div>
-                {bottomActiveTeamInfo}
+            <div className="box">
+                <div class="columns is-centered">
+                    <div className="title is-6 column">Bottom Constructors Score</div>
+                </div>
+
+                <div class="columns is-centered">
+                    <div class="column is-6">
+                        <table class="score-board table is-bordered is-hoverable">
+                        <thead class="has-background-danger-dark">
+                            <tr>
+                            <th>Team</th>
+                            <th>Score</th>
+                            <th>Info</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {bottomTeamScores}
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="columns is-centered">
+                    <div class="title column is-6">{currentTeam.name}</div>
+                </div>
+                <div class="columns is-centered">
+                    <div class="column is-6">
+                      {bottomActiveTeamInfo}
+                    </div>
+                </div>
             </div>
 
 

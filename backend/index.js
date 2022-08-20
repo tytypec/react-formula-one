@@ -5,6 +5,7 @@ import path from 'path';
 import fetch from "node-fetch";
 import {fileURLToPath} from 'url';
 import { log } from "console";
+// chronjobs
 
 const app = express();
 const port = 3001;
@@ -27,7 +28,11 @@ var myStuff = {
     seasonRaces: [],
     seasonDrivers: [],
     amountOfRaces: 23,
-    currentRound: 10,
+    seasonStartingRound: 10,
+    getRacesConfig:{
+        // frequency: 1800000,  
+        frequency: 1800,  
+    }, 
     leagueIdentificationNumber: 1,
     images: [],
     scoreSheet: [
@@ -81,9 +86,14 @@ async function main(){
     // console.log(myImages);
     addRacesToDrivers();
     sendInfo();
+    // this is a 10 second interval used for testing code
+    // setInterval(checkDate, 10000);
+    // this is a 30 mins interval to check if its sunday. *Scheduled jobs.
+    setInterval(getRaces, myStuff.getRacesConfig.frequency);
 }
 
 main();
+
 
 workingFilePaths.forEach((element, index) => {
     // var imageURL = repo.folderPath() + element
@@ -92,19 +102,19 @@ workingFilePaths.forEach((element, index) => {
     // var imageName = element.replace(/\.[^/.]+$/, "");
     var imageName = element.replace(".png", "");
     var thing = {
-      image: imageName,
-      url : imageURL,
-      id: index
+        image: imageName,
+        url : imageURL,
+        id: index
     }
     myStuff.images.push(thing);
     // console.log(thing);
-  })
+})
 
-  app.get("/images", (req, res) => {
+app.get("/images", (req, res) => {
     res.json(images);
-  });
+});
   
-  app.get("/image/:imageName", (req, res) => {
+app.get("/image/:imageName", (req, res) => {
   
     var options = {
       root: repo.imageDirectory,
@@ -126,28 +136,51 @@ workingFilePaths.forEach((element, index) => {
     })
     // console.log(req.params);
     // res.json(req.params.name);
-  });
+});
 
+//   return number of latest race week  
+function latestRaceWeek(){
+    // this is offset to start at 10th race of season.
+    var raceCount = myStuff.seasonRaces.length + myStuff.seasonStartingRound;
+    return raceCount; 
+}
 
-  async function getRaces() {
-    // console.log("getRaces");
-    for (let m = 10; m <= myStuff.amountOfRaces; m++) {
-        const raceURL = `http://ergast.com/api/f1/2022/${m}/results.json`
+async function getRaces() {
+    var currentRace = latestRaceWeek();
+    var found = true;
+
+    while (found) {
+        const raceURL = `http://ergast.com/api/f1/2022/${currentRace}/results.json`
         var raceResponse = await fetch(raceURL);
         var raceJson = await raceResponse.json();
-        if(!raceJson|| raceJson.MRData.RaceTable.Races.length === 0){return}
-        var races = raceJson.MRData.RaceTable.Races;
-        // there could be extra data in the array, we want to isolate object.
-        // console.log(races);
-        // myStuff.seasonRaces.concat(races);
+        found = raceJson && raceJson.MRData.RaceTable.Races.length;
+        if(!found) { continue; };
+        var races = raceJson.MRData.RaceTable.Races; 
         myStuff.seasonRaces.push(races[0]);
-        // console.log(myStuff.seasonRaces);
-        // if(this.state.seasonRaces.includes(races) === true){return}
-        // this.setState(function(state) {
-        //     return { seasonRaces: state.seasonRaces.concat(races) }
-        // });
+        currentRace += 1;
     }
+
 }
+
+//   async function getRacesForLoop() {
+//     // console.log("getRaces");
+//     for (let m = 10; m <= myStuff.amountOfRaces; m++) {
+//         const raceURL = `http://ergast.com/api/f1/2022/${m}/results.json`
+//         var raceResponse = await fetch(raceURL);
+//         var raceJson = await raceResponse.json();
+//         if(!raceJson|| raceJson.MRData.RaceTable.Races.length === 0){return}
+//         var races = raceJson.MRData.RaceTable.Races;
+//         // there could be extra data in the array, we want to isolate object.
+//         // console.log(races);
+//         // myStuff.seasonRaces.concat(races);
+//         myStuff.seasonRaces.push(races[0]);
+//         // console.log(myStuff.seasonRaces);
+//         // if(this.state.seasonRaces.includes(races) === true){return}
+//         // this.setState(function(state) {
+//         //     return { seasonRaces: state.seasonRaces.concat(races) }
+//         // });
+//     }
+// }
 
 async function getDrivers() {
     // console.log("inside getDrivers");
@@ -156,36 +189,6 @@ async function getDrivers() {
     var fullDriverDetail = await driverResponse.json();
     var drivers = fullDriverDetail.MRData.DriverTable.Drivers;
 
-    //reduce is similar to map
-    // function noHulkenburg(memo, driver){
-    //     if (driver.code === "HUL") { return memo;}
-    //     driver.imageUrl = `http://localhost:3000/image/${driver.code}.png`;
-    //     driver.results = [];
-    //     memo.push(driver)
-    //     console.log(driver.code);
-    //     console.log(memo.length);
-    //     return memo;
-
-    // }
-
-    // drivers = drivers.reduce(noHulkenburg, [])
-    
-    
-    
-    
-    // drivers.forEach(driver =>{ console.log(driver.code);})
-    // var memo = [];
-
-    // var memo = drivers.map(driver => {
-    //     if(driver.code === "HUL"){        
-    //         return
-    //     }
-    //     // memo.push(driver)
-    //     // console.log(memo.length);
-    //     return driver;
-    // })
-
-    // memo.forEach(driver =>{ console.log(driver.code);})
 
     drivers = drivers.reduce((memo, driver) => {
         if (driver.code === "HUL") { return memo;}
@@ -194,15 +197,6 @@ async function getDrivers() {
         memo.push(driver)
         return memo;
     }, [])
-
-    // var numbers = [1,2,3,4,5]
-    
-    // var fun = numbers.reduce((num, numbers) => {
-    //     numbers += num
-    //     return numbers;
-    // }, 0)
-
-    // console.log(fun);
 
     myStuff.seasonDrivers = drivers;
 }
