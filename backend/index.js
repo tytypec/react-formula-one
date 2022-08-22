@@ -259,3 +259,31 @@ function sendInfo(){
 app.listen(port, () => {
     console.log('Server Listening on port', port);
   });
+
+
+
+
+
+
+
+
+// error recieved
+//   file:///D:/Code/react-formula-one/backend/node_modules/node-fetch/src/index.js:108
+//                         reject(new 
+// FetchError(`request to ${request.url} failed, reason: ${error.message}`, 'system', error));
+//                                ^   
+
+// FetchError: request to http://ergast.com/api/f1/2022/14/results.json failed, reason: connect ETIMEDOUT 185.229.22.110:80
+//     at ClientRequest.<anonymous> (file:///D:/Code/react-formula-one/backend/node_modules/node-fetch/src/index.js:108:11)
+//     at ClientRequest.emit (node:events:390:28)
+//     at Socket.socketErrorListener (node:_http_client:447:9)
+//     at Socket.emit (node:events:390:28)
+//     at emitErrorNT (node:internal/streams/destroy:157:8)
+//     at emitErrorCloseNT (node:internal/streams/destroy:122:3)
+//     at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+//   type: 'system',
+//   errno: 'ETIMEDOUT',
+//   code: 'ETIMEDOUT',
+//   erroredSysCall: 'connect'        
+// }
+// PS D:\Code\react-formula-one\backend>

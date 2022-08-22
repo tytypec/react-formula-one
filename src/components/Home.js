@@ -332,35 +332,48 @@ class Home extends React.Component {
                     var imageSource = driver.imageUrl ? driver.imageUrl : "";
 
                     return( 
+                    <div class="box is-full">
+                        <div class="media">
+                            <div class="media-left">
+                                <figure class="image is-64x64">
+                                <img src={imageSource} alt="didnt load" />
+                                </figure>
+                                <div class="media">
 
-                    <tr key={driver.code}>
-                        <img src={imageSource} alt="didnt load" />
-                        <th>{driver.familyName}</th>
-                        <th>{driver.construction}</th>
-                        <th>{driver.nationality}</th>
-                        <th>{driver.seasonPoints}</th>
-                    </tr>
+                                </div>
+                            </div>
+
+                            <div class="container is-fluid">
+                                <nav class="level is-mobile">
+                                    <div class="level-item has-text-centered">     
+                                        <div>                                  
+                                            <p class="title is-5">{driver.familyName}</p>
+                                            <br></br>
+                                            <p class="subtitle is-5">{driver.nationality}</p>
+                                        </div> 
+                                    </div>
+                                    <div class="level-item has-text-centered">
+                                        <div>
+                                            <p class="title is-5">{driver.construction}</p>
+                                            <br></br>
+                                            <p class="subtitle is-5">{driver.seasonPoints} pts</p>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>    
+                    </div>
+
+                    // <tr key={driver.code}>
+                    //     <img src={imageSource} alt="didnt load" />
+                    //     <td>{driver.familyName}</td>
+                    //     <td>{driver.construction}</td>
+                    //     <td>{driver.nationality}</td>
+                    //     <td>{driver.seasonPoints}</td>
+                    // </tr>
 
                     )
                 })
-
-                activeTeamInfo =
-                <div className="table-container">
-                <table class="table is-bordered is-hoverable">
-                <thead class="has-background-danger-dark">
-                    <tr>
-                    <th>Image</th>
-                    <th>Driver</th>
-                    <th>Construction</th>
-                    <th>Nationality</th>
-                    <th>Total Points</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentTeamInfo}
-                </tbody>
-            </table>
-            </div>
             }
 
             topTeamsInfo = 
@@ -385,10 +398,8 @@ class Home extends React.Component {
                         <div class="columns is-centered">
                             <div className="title column is-6">{currentTeam.name}</div>
                         </div>
-                        <div class="columns is-centered">
-                            <div class="columns is-6">
-                                {activeTeamInfo}
-                            </div>    
+                        <div class="container is-centered">
+                            {currentTeamInfo}    
                         </div>
                     </div>
                 </div>
@@ -404,10 +415,10 @@ class Home extends React.Component {
 
                     <tr key={driver.code}>
                         <img src={imageSource} alt="didnt load" />
-                        <th>{driver.familyName}</th>
-                        <th>{driver.construction}</th>
-                        <th>{driver.nationality}</th>
-                        <th>{driver.seasonPoints}</th>
+                        <td>{driver.familyName}</td>
+                        <td>{driver.construction}</td>
+                        <td>{driver.nationality}</td>
+                        <td>{driver.seasonPoints}</td>
                     </tr>
 
                     )
@@ -418,11 +429,11 @@ class Home extends React.Component {
                     <table class="table is-bordered is-hoverable">
                         <thead class="has-background-danger-dark">
                             <tr>
-                                <th>Image</th>
-                                <th>Driver</th>
-                                <th>Construction</th>
-                                <th>Nationality</th>
-                                <th>Total Points</th>
+                                <th><abbr title="Image">IMG</abbr></th>
+                                <th><abbr title="Driver">DVR</abbr></th>
+                                <th><abbr title="Construction">CST</abbr></th>
+                                <th><abbr title="Nationality">NAT</abbr></th>
+                                <th><abbr title="Total Points">PTS</abbr></th>
                             </tr>
                         </thead>
                         <tbody>
