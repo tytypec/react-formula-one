@@ -363,26 +363,38 @@ class Home extends React.Component {
             </div>
             }
 
-            topTeamsInfo = <div className="box is-flex-direction-column columns is-vcentered">
-            <div className="title">Top Constructors Score</div>
-                <table class="score-board table is-bordered is-hoverable ">
-                    <thead class="has-background-danger-dark">
-                        <tr>
-                        <th>Team</th>
-                        <th>Score</th>
-                        <th>Info</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {topTeamScores}
-                    </tbody>
-                </table>
-                <div className="title">{currentTeam.name}</div>
-                
-                {activeTeamInfo}
+            topTeamsInfo = 
+            <div className="box">
+                <div class="columns is-centered">
+                    <div className="title is-6 column">Top Constructors Score</div>
+                </div>
+                <div class="columns is-centered">
+                    <div className="column is-6">
+                        <table class="score-board table is-bordered is-hoverable ">
+                            <thead class="has-background-danger-dark">
+                                <tr>
+                                <th>Team</th>
+                                <th>Score</th>
+                                <th>Info</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {topTeamScores}
+                            </tbody>
+                        </table>
+                        <div class="columns is-centered">
+                            <div className="title column is-6">{currentTeam.name}</div>
+                        </div>
+                        <div class="columns is-centered">
+                            <div class="columns is-6">
+                                {activeTeamInfo}
+                            </div>    
+                        </div>
+                    </div>
+                </div>
             </div> 
             
-                        // 
+            // 
             if(!this.state.bottomTeamDisplayCollapsed){
                 currentTeam = this.state.activeBottomTeam
                 currentTeamInfo = currentTeam.teamDriverInfo.map((driver) => {
