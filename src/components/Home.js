@@ -128,7 +128,7 @@ class Home extends React.Component {
         console.log("MYSTUFF", this.myStuff);
     }
     // dictionary python a way to look up information.
-    
+   
     imageLoader(driverList){
         //I dont think this function is needed anymore.
         var imageCount = 0;
@@ -339,7 +339,6 @@ class Home extends React.Component {
                                 <img src={imageSource} alt="didnt load" />
                                 </figure>
                                 <div class="media">
-
                                 </div>
                             </div>
 
@@ -408,39 +407,46 @@ class Home extends React.Component {
             // 
             if(!this.state.bottomTeamDisplayCollapsed){
                 currentTeam = this.state.activeBottomTeam
-                currentTeamInfo = currentTeam.teamDriverInfo.map((driver) => {
+                bottomActiveTeamInfo = currentTeam.teamDriverInfo.map((driver) => {
                     var imageSource = driver.imageUrl ? driver.imageUrl : "";
 
                     return( 
 
-                    <tr key={driver.code}>
-                        <img src={imageSource} alt="didnt load" />
-                        <td>{driver.familyName}</td>
-                        <td>{driver.construction}</td>
-                        <td>{driver.nationality}</td>
-                        <td>{driver.seasonPoints}</td>
-                    </tr>
+                        <div class="box is-full">
+                        <div class="media">
+                            <div class="media-left">
+                                <figure class="image is-64x64">
+                                <img src={imageSource} alt="didnt load" />
+                                </figure>
+                                <div class="media">
+
+                                </div>
+                            </div>
+
+                            <div class="container is-fluid">
+                                <nav class="level is-mobile">
+                                    <div class="level-item has-text-centered">     
+                                        <div>                                  
+                                            <p class="title is-5">{driver.familyName}</p>
+                                            <br></br>
+                                            <p class="subtitle is-5">{driver.nationality}</p>
+                                        </div> 
+                                    </div>
+                                    <div class="level-item has-text-centered">
+                                        <div>
+                                            <p class="title is-5">{driver.construction}</p>
+                                            <br></br>
+                                            <p class="subtitle is-5">{driver.seasonPoints} pts</p>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>    
+                    </div>
 
                     )
                 })
 
-                bottomActiveTeamInfo =
-                <div className="table-container">
-                    <table class="table is-bordered is-hoverable">
-                        <thead class="has-background-danger-dark">
-                            <tr>
-                                <th><abbr title="Image">IMG</abbr></th>
-                                <th><abbr title="Driver">DVR</abbr></th>
-                                <th><abbr title="Construction">CST</abbr></th>
-                                <th><abbr title="Nationality">NAT</abbr></th>
-                                <th><abbr title="Total Points">PTS</abbr></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentTeamInfo}
-                        </tbody>
-                    </table>
-                </div>
             }
 
             bottomTeamScores = this.myStuff.bottomTeams.map((team) => {  

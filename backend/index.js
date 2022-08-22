@@ -30,8 +30,8 @@ var myStuff = {
     amountOfRaces: 23,
     seasonStartingRound: 10,
     getRacesConfig:{
-        // frequency: 1800000,  
-        frequency: 1800,  
+        frequency: 1800000,  
+        // frequency: 11800,  
     }, 
     leagueIdentificationNumber: 1,
     images: [],
@@ -145,14 +145,40 @@ function latestRaceWeek(){
     return raceCount; 
 }
 
+// async function getRaces(){
+//     var data;
+//     const raceURL = `http://ergast.com/api/f1/2022/10/results.json`
+//     var myPromise = fetch(raceURL).then((response)=>{
+//         data = response
+//         console.log(data);
+//     });
+
+//     console.log(myPromise);
+//     console.log(data);
+// }
+
 async function getRaces() {
     var currentRace = latestRaceWeek();
     var found = true;
 
     while (found) {
         const raceURL = `http://ergast.com/api/f1/2022/${currentRace}/results.json`
-        var raceResponse = await fetch(raceURL);
-        var raceJson = await raceResponse.json();
+        try{
+        var raceResponse = await fetch(raceURL);}
+        catch(e){
+            console.log("fail to fetch raceResponse from the race number", currentRace);
+            console.log(e);
+            break
+        };
+        try{
+            var raceJson = await raceResponse.json();
+            console.log("raceResponse.json code");
+        }
+        catch(e){
+            console.log("fail to fetch raceJson from the race number", currentRace);
+            console.log(e);
+            break
+        };
         found = raceJson && raceJson.MRData.RaceTable.Races.length;
         if(!found) { continue; };
         var races = raceJson.MRData.RaceTable.Races; 
@@ -287,3 +313,23 @@ app.listen(port, () => {
 //   erroredSysCall: 'connect'        
 // }
 // PS D:\Code\react-formula-one\backend>
+
+
+// file:///D:/Code/react-formula-one/backend/node_modules/node-fetch/src/index.js:108
+//                         reject(new 
+// FetchError(`request to ${request.url} failed, reason: ${error.message}`, 'system', error));
+//                                ^   
+
+// FetchError: request to http://ergast.com/api/f1/2022/14/results.json failed, reason: read ECONNRESET     
+//     at ClientRequest.<anonymous> (file:///D:/Code/react-formula-one/backend/node_modules/node-fetch/src/index.js:108:11)
+//     at ClientRequest.emit (node:events:390:28)
+//     at Socket.socketErrorListener (node:_http_client:447:9)
+//     at Socket.emit (node:events:390:28)
+//     at emitErrorNT (node:internal/streams/destroy:157:8)
+//     at emitErrorCloseNT (node:internal/streams/destroy:122:3)
+//     at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+//   type: 'system',
+//   errno: 'ECONNRESET',
+//   code: 'ECONNRESET',
+//   erroredSysCall: 'read'
+// }
