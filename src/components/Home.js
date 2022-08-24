@@ -246,6 +246,8 @@ class Home extends React.Component {
         var bottomActiveTeamInfo = "";
         var currentTeamInfo ="";
         var currentTeam = "";
+        var pointsKey ="";
+        var carIcon = <img src={require("../images/car.gif")} width="112" height="55"></img> 
 
         if(!this.state.teamsFetched){
             console.log("Loading");
@@ -258,8 +260,34 @@ class Home extends React.Component {
         }
         else{
             console.log('Loading Complete');
+            carIcon = <img src={require("../images/car.png")} width="112" height="55"></img> 
 
             if(!this.state.driverListCollapsed){
+                pointsKey = 
+                <div class="box is-6 is-size-5-desktop">
+                    <div className="table-container">
+                        <table class="table is-bordered is-striped is-hoverable">
+                            <thead>
+                                <th>Word</th>
+                                <th>Grid Position</th>
+                                <th>Grid Points</th>
+                                <th>Race Position</th>
+                                <th>Race Points</th>
+                                <th>Weekend Points</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Abbr</th>
+                                    <td>G Po</td>
+                                    <td>G Pt</td>
+                                    <td>R Po</td>
+                                    <td>R Pt</td>
+                                    <td>WP</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 driversAsListItems = this.state.backendInfo.seasonDrivers.map((driver) => {
                     var imageSource = driver.imageUrl ? driver.imageUrl : "";
                     var driverRacesStats = driver.results.map((result) => {
@@ -277,40 +305,44 @@ class Home extends React.Component {
                     })
 
                     return (<li class="box block" key={driver.code}>
-                        <div class="columns is-vcentered title is-3">
-                            <div class="column has-background-danger-dark">
+                        <div class="columns is-centered title is-3">
+                            <div class="column is-6 has-background-danger-dark">
                                 {driver.code} - {driver.givenName} {driver.familyName} <br/>
                                 {driver.permanentNumber} - {driver.construction}
                             </div>
                         </div>
-                        <div class="columns is-vcentered title is-3">
+                        <div class="columns is-centered title is-6">
                             {/* <div class="column "></div> */}
                             <div class="column is-full">
                                 <img src={imageSource} alt="didnt load" />
                             <br/>
                             </div>
                         </div>
-                        <div className="table-container">
-                            <table class="table is-narrow is-bordered is-striped is-hoverable">
-                                <thead>
-                                    <tr>
-                                    <th><abbr title="Race">Race</abbr></th>
-                                    <th><abbr title="Grid Position">GPos</abbr></th>
-                                    <th><abbr title="Grid Points">GPts</abbr></th>
-                                    <th><abbr title="Race Position">RPos</abbr></th>
-                                    <th><abbr title="Race Points">RPts</abbr></th>
-                                    <th><abbr title="Total Weekend Points">TWP</abbr></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {driverRacesStats}
-                                    <tr>
-                                        <th rowSpan={2}>total points</th>
-                                        <td colSpan={1}>{driver.seasonPoints}</td>
-                                        <td class="has-background-grey-lighter"colSpan={4}></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="columns is-centered title is-6">
+                            <div class="column is-narrow">
+                                <div className="table-container">
+                                    <table class="table is-narrow is-bordered is-striped is-hoverable">
+                                        <thead>
+                                            <tr>
+                                            <th><abbr title="Race">Race</abbr></th>
+                                            <th><abbr title="Grid Position">G Po</abbr></th>
+                                            <th><abbr title="Grid Points">G Pt</abbr></th>
+                                            <th><abbr title="Race Position">R Po</abbr></th>
+                                            <th><abbr title="Race Points">R Pt</abbr></th>
+                                            <th><abbr title="Total Weekend Points">WP</abbr></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {driverRacesStats}
+                                            <tr>
+                                                <th rowSpan={2}>Total Points</th>
+                                                <td colSpan={1}>{driver.seasonPoints}</td>
+                                                <td class="has-background-grey-lighter"colSpan={4}></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </li>)
                     
@@ -534,7 +566,53 @@ class Home extends React.Component {
         
         return (
             <div className="container has-background-white-ter is-full has-text-centered">
-                
+                <div className="box is-centered">
+                    <div class="column is-half">
+                        <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+                            <div class="navbar-brand">
+                                <a class="navbar-item">
+                                {carIcon} Title LOL
+                                </a>
+
+                                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                                <span aria-hidden="true"></span>
+                                <span aria-hidden="true"></span>
+                                <span aria-hidden="true"></span>
+                                </a>
+                            </div>
+
+                            <div id="navbarBasicExample" class="navbar-menu">
+                                <div class="navbar-start">
+                                <div class="navbar-item has-dropdown is-hoverable">
+                                    <a class="navbar-link">
+                                    More
+                                    </a>
+
+                                    <div class="navbar-dropdown">
+                                    <a class="navbar-item">
+                                        About
+                                    </a>
+                                    <a class="navbar-item">
+                                        Jobs
+                                    </a>
+                                    <a class="navbar-item">
+                                        Contact
+                                    </a>
+                                    <a class="navbar-item">
+                                        Report an issue
+                                    </a>
+                                    </div>
+                                </div>
+                                </div>
+
+                                <div class="navbar-end">
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+
+
                 {topTeamsInfo}
 
                 
@@ -547,8 +625,13 @@ class Home extends React.Component {
                             <button className="button" onClick={() => this.handleDriverToggle()}>
                             <span>Show Drivers</span>
                             </button>
-                        </div> 
-                    <ul>{driversAsListItems}</ul>
+                        </div>
+                        <div className="columns is-centered">
+                            <div className="pointsKey column is-6">
+                                {pointsKey} 
+                            </div>
+                        </div>
+                        <ul>{driversAsListItems}</ul>
                     </div>
                 
                 <div className="box">
@@ -565,3 +648,31 @@ class Home extends React.Component {
 }
 
 export default Home;
+
+
+
+{/* <div id="outerBox" class="columns is-mobile">
+<div id="picture" class="column is-3">
+    <img src={imageSource} alt="didnt load" />
+</div>
+<div id="stats" class="column is-9">
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <div class="columns is-mobile">
+                <div class="column is-12">
+                    <p class="title is-5">{driver.familyName}</p>       
+                </div>
+            </div>
+            <div class="columns is-mobile">
+                <div class="column is-12">
+                    <p class="subtitle is-5">{driver.construction}</p>       
+                </div>
+            </div>
+        </div>
+        <div class="column is-half">
+            <div class="columns is-mobile">def</div>
+            <div class="columns is-mobile">saf</div>
+        </div>
+    </div>
+</div>
+</div> */}

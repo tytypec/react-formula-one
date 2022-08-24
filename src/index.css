@@ -23,3 +23,7 @@ code {
 .column{
   border: 1px solid blue;
 }
+
+.pointsKey{
+  font-size: .65rem;
+}
