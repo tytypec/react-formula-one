@@ -247,7 +247,7 @@ class Home extends React.Component {
         var currentTeamInfo ="";
         var currentTeam = "";
         var pointsKey ="";
-        var carIcon = <img src={require("../images/car.gif")} width="112" height="55"></img> 
+        var carIcon = <img src={require("../images/car.gif")} width="271" height="100"></img> 
 
         if(!this.state.teamsFetched){
             console.log("Loading");
@@ -260,7 +260,7 @@ class Home extends React.Component {
         }
         else{
             console.log('Loading Complete');
-            carIcon = <img src={require("../images/car.png")} width="112" height="55"></img> 
+            carIcon = <img src={require("../images/car.png")} width="136" height="50"></img> 
 
             if(!this.state.driverListCollapsed){
                 pointsKey = 
@@ -565,52 +565,94 @@ class Home extends React.Component {
 
         
         return (
-            <div className="container has-background-white-ter is-full has-text-centered">
-                <div className="box is-centered">
-                    <div class="column is-half">
-                        <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-                            <div class="navbar-brand">
-                                <a class="navbar-item">
-                                {carIcon} Title LOL
-                                </a>
-
-                                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                                <span aria-hidden="true"></span>
-                                <span aria-hidden="true"></span>
-                                <span aria-hidden="true"></span>
-                                </a>
+            <div id="mainContainer" className="container has-background-white-ter is-full has-text-centered">
+                <div class="columns">
+                    <div class="column is-12">
+                        <div class="card">
+                            <div class="card-header">
                             </div>
-
-                            <div id="navbarBasicExample" class="navbar-menu">
-                                <div class="navbar-start">
-                                <div class="navbar-item has-dropdown is-hoverable">
-                                    <a class="navbar-link">
-                                    More
-                                    </a>
-
-                                    <div class="navbar-dropdown">
-                                    <a class="navbar-item">
-                                        About
-                                    </a>
-                                    <a class="navbar-item">
-                                        Jobs
-                                    </a>
-                                    <a class="navbar-item">
-                                        Contact
-                                    </a>
-                                    <a class="navbar-item">
-                                        Report an issue
-                                    </a>
+                            <div class="card-content">
+                                <nav class="navbar is-light is-transparent" role="navigation" aria-label="main navigation">
+                                    <div class="navbar-brand">
+                                        <a class="navbar-item">
+                                        {carIcon}
+                                        </a>
+                                        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                                            <span aria-hidden="true"></span>
+                                            <span aria-hidden="true"></span>
+                                            <span aria-hidden="true"></span>
+                                        </a>
                                     </div>
-                                </div>
-                                </div>
-
-                                <div class="navbar-end">
-                                </div>
+                                    <div id="navbarBasicExample" class="navbar-menu">
+                                        <div class="navbar-start">
+                                            <div class="navbar-item has-dropdown is-hoverable">
+                                                <a class="navbar-link"> More </a>
+                                                <div class="navbar-dropdown">
+                                                    <a class="navbar-item"> About </a>
+                                                    <a class="navbar-item"> Contact </a>
+                                                    <a class="navbar-item"> Report an issue </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="navbar-end">
+                                        </div>
+                                    </div>
+                                </nav>
                             </div>
-                        </nav>
+                        </div>
                     </div>
                 </div>
+                
+                
+                {/* <div className="columns is-centered">
+                    <div class="column is-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <nav id="desktopNav" class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+                                    <div class="navbar-brand">
+                                        <a class="navbar-item">
+                                        {carIcon} Think of a Cool Title
+                                        </a>
+
+                                        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                                        <span aria-hidden="true"></span>
+                                        <span aria-hidden="true"></span>
+                                        <span aria-hidden="true"></span>
+                                        </a>
+                                    </div>
+
+                                    <div id="navbarBasicExample" class="navbar-menu">
+                                        <div class="navbar-start">
+                                        <div class="navbar-item has-dropdown is-hoverable">
+                                            <a class="navbar-link">
+                                            More
+                                            </a>
+
+                                            <div class="navbar-dropdown">
+                                            <a class="navbar-item">
+                                                About
+                                            </a>
+                                            <a class="navbar-item">
+                                                Jobs
+                                            </a>
+                                            <a class="navbar-item">
+                                                Contact
+                                            </a>
+                                            <a class="navbar-item">
+                                                Report an issue
+                                            </a>
+                                            </div>
+                                        </div>
+                                        </div>
+
+                                        <div class="navbar-end">
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div> */}
 
 
                 {topTeamsInfo}
