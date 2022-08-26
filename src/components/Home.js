@@ -112,6 +112,7 @@ class Home extends React.Component {
             raceListCollapsed: true,
             topTeamDisplayCollapsed: true,
             bottomTeamDisplayCollapsed: true,
+            carGifGo: false,
             activeTopTeam: [],
             activeBottomTeam: [],
         }
@@ -233,6 +234,27 @@ class Home extends React.Component {
         }
     }
 
+    closeDrivers(){
+        console.log('you clicked close driver and it worked');
+        this.setState({ driverListCollapsed: true});
+    }
+
+    closeRaces(){
+        console.log('you clicked close race and it worked');
+        this.setState({ raceListCollapsed: true});
+    }
+    mouseEnter(){
+        console.log('you are hovering');
+        this.setState({ carGifGo: true});    
+    }
+    mouseLeave(){
+        console.log('you are NOT hovering');
+        this.setState({ carGifGo: false});    
+    }
+
+    carClick(){
+        this.setState({ carGifGo: !this.state.carGifGo});
+    }
 
 
     render() {
@@ -247,7 +269,16 @@ class Home extends React.Component {
         var currentTeamInfo ="";
         var currentTeam = "";
         var pointsKey ="";
-        var carIcon = <img src={require("../images/car.gif")} width="271" height="100"></img> 
+        var carIcon = <img src={require("../images/car.gif")} onClick={() => this.carClick()} onMouseLeave={() => this.mouseLeave()} width="136" height="50"></img> 
+
+        if(this.state.carGifGo){
+            carIcon = <img src={require("../images/car.gif")} onClick={() => this.carClick()} onMouseLeave={() => this.mouseLeave()} width="136" height="50"></img>
+            console.log('go go go');
+             
+        }
+        else{
+            carIcon = <img src={require("../images/car.png")} onClick={() => this.carClick()} onMouseOver={() => this.mouseEnter()} onMouseLeave={() => this.mouseLeave()} width="136" height="50"></img>  
+        }
 
         if(!this.state.teamsFetched){
             console.log("Loading");
@@ -260,7 +291,7 @@ class Home extends React.Component {
         }
         else{
             console.log('Loading Complete');
-            carIcon = <img src={require("../images/car.png")} width="136" height="50"></img> 
+            // carIcon = <img src={require("../images/car.png")} onClick={() => this.mouseEnter()} width="136" height="50"></img> 
 
             if(!this.state.driverListCollapsed){
                 pointsKey = 
@@ -572,11 +603,16 @@ class Home extends React.Component {
                             <div class="card-header">
                             </div>
                             <div class="card-content">
-                                <nav class="navbar is-light is-transparent" role="navigation" aria-label="main navigation">
+                                <nav class="navbar  is-light is-transparent is-mobile-is-fixed-top" role="navigation" aria-label="main navigation">
                                     <div class="navbar-brand">
                                         <a class="navbar-item">
                                         {carIcon}
                                         </a>
+                                        <a class="navbar-item">
+                                        Formula Wow
+                                        </a>
+
+
                                         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                                             <span aria-hidden="true"></span>
                                             <span aria-hidden="true"></span>
@@ -585,16 +621,9 @@ class Home extends React.Component {
                                     </div>
                                     <div id="navbarBasicExample" class="navbar-menu">
                                         <div class="navbar-start">
-                                            <div class="navbar-item has-dropdown is-hoverable">
-                                                <a class="navbar-link"> More </a>
-                                                <div class="navbar-dropdown">
-                                                    <a class="navbar-item"> About </a>
-                                                    <a class="navbar-item"> Contact </a>
-                                                    <a class="navbar-item"> Report an issue </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="navbar-end">
+                                            <a class="navbar-item" onClick={() => this.closeDrivers()}> Close Drivers </a>
+                                            <a class="navbar-item" onClick={() => this.closeRaces()}> Close Races </a>
+                                            <a class="navbar-item"> Info </a>
                                         </div>
                                     </div>
                                 </nav>
