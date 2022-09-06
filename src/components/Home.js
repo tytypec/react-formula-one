@@ -112,6 +112,7 @@ class Home extends React.Component {
             raceListCollapsed: true,
             topTeamDisplayCollapsed: true,
             bottomTeamDisplayCollapsed: true,
+            burgerMenuCollapsed: true,
             carGifGo: false,
             activeTopTeam: [],
             activeBottomTeam: [],
@@ -254,6 +255,12 @@ class Home extends React.Component {
 
     carClick(){
         this.setState({ carGifGo: !this.state.carGifGo});
+    }
+    burgerMenuClick(){
+        
+        this.setState({burgerMenuCollapsed: !this.state.burgerMenuCollapsed});
+        console.log('burger menu click', this.state.burgerMenuCollapsed);
+        
     }
 
 
@@ -603,7 +610,7 @@ class Home extends React.Component {
                             <div class="card-header">
                             </div>
                             <div class="card-content">
-                                <nav class="navbar  is-light is-transparent is-mobile-is-fixed-top" role="navigation" aria-label="main navigation">
+                                <nav class="navbar is-light is-transparent is-fixed-top" role="navigation" aria-label="main navigation">
                                     <div class="navbar-brand">
                                         <a class="navbar-item">
                                         {carIcon}
@@ -613,13 +620,14 @@ class Home extends React.Component {
                                         </a>
 
 
-                                        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                                        {/* <a role="button" onClick={() => this.burgerMenuClick()} class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample"> */}
+                                        <a role="button" onClick={() => this.burgerMenuClick()} class={`navbar-burger burger ${this.state.burgerMenuCollapsed ? "is-active" : ""}`} aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                                             <span aria-hidden="true"></span>
                                             <span aria-hidden="true"></span>
                                             <span aria-hidden="true"></span>
                                         </a>
                                     </div>
-                                    <div id="navbarBasicExample" class="navbar-menu">
+                                    <div id="navbarBasicExample" class={`navbar-menu ${this.state.burgerMenuCollapsed ? "is-active" : ""}`}>
                                         <div class="navbar-start">
                                             <a class="navbar-item" onClick={() => this.closeDrivers()}> Close Drivers </a>
                                             <a class="navbar-item" onClick={() => this.closeRaces()}> Close Races </a>

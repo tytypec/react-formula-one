@@ -35,7 +35,7 @@ justify-content:center;
 } */
 
 .navbar{
-max-width: 1328px;
+/* max-width: 1328px; */
 display:flex;
 justify-content:center;
 }
