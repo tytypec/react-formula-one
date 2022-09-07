@@ -112,8 +112,9 @@ class Home extends React.Component {
             raceListCollapsed: true,
             topTeamDisplayCollapsed: true,
             bottomTeamDisplayCollapsed: true,
-            burgerMenuCollapsed: true,
+            burgerMenuCollapsed: false,
             carGifGo: false,
+            pageInfoCollapsed: true,
             activeTopTeam: [],
             activeBottomTeam: [],
         }
@@ -126,11 +127,37 @@ class Home extends React.Component {
         this.addDriversToTeams(this.myStuff.bottomTeams);
         this.sumTeamPoints(this.myStuff.topTeams, this.state.topTeams);
         this.sumTeamPoints(this.myStuff.bottomTeams, this.state.bottomTeams);
+        this.navbarJustWork();
         console.log("STATE", this.state);
         console.log("MYSTUFF", this.myStuff);
     }
     // dictionary python a way to look up information.
    
+
+    navbarJustWork(){
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Get all "navbar-burger" elements
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+          
+            // Add a click event on each of them
+            $navbarBurgers.forEach( el => {
+              el.addEventListener('click', () => {
+          
+                // Get the target from the "data-target" attribute
+                const target = el.dataset.target;
+                const $target = document.getElementById(target);
+          
+                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                el.classList.toggle('is-active');
+                $target.classList.toggle('is-active');
+          
+              });
+            });
+          
+          });
+    }
+
     imageLoader(driverList){
         //I dont think this function is needed anymore.
         var imageCount = 0;
@@ -239,7 +266,6 @@ class Home extends React.Component {
         console.log('you clicked close driver and it worked');
         this.setState({ driverListCollapsed: true});
     }
-
     closeRaces(){
         console.log('you clicked close race and it worked');
         this.setState({ raceListCollapsed: true});
@@ -262,6 +288,9 @@ class Home extends React.Component {
         console.log('burger menu click', this.state.burgerMenuCollapsed);
         
     }
+    pageInfoToggle(){
+        this.setState({ pageInfoCollapsed: !this.state.pageInfoCollapsed});
+    };
 
 
     render() {
@@ -276,8 +305,9 @@ class Home extends React.Component {
         var currentTeamInfo ="";
         var currentTeam = "";
         var pointsKey ="";
+        var pageInfo ="";
         var carIcon = <img src={require("../images/car.gif")} onClick={() => this.carClick()} onMouseLeave={() => this.mouseLeave()} width="136" height="50"></img> 
-
+        
         if(this.state.carGifGo){
             carIcon = <img src={require("../images/car.gif")} onClick={() => this.carClick()} onMouseLeave={() => this.mouseLeave()} width="136" height="50"></img>
             console.log('go go go');
@@ -603,100 +633,41 @@ class Home extends React.Component {
 
         
         return (
-            <div id="mainContainer" className="container has-background-white-ter is-full has-text-centered">
-                <div class="columns">
-                    <div class="column is-12">
-                        <div class="card">
-                            <div class="card-header">
-                            </div>
-                            <div class="card-content">
-                                <nav class="navbar is-light is-transparent is-fixed-top" role="navigation" aria-label="main navigation">
-                                    <div class="navbar-brand">
-                                        <a class="navbar-item">
-                                        {carIcon}
-                                        </a>
-                                        <a class="navbar-item">
-                                        Formula Wow
-                                        </a>
-
-
-                                        {/* <a role="button" onClick={() => this.burgerMenuClick()} class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample"> */}
-                                        <a role="button" onClick={() => this.burgerMenuClick()} class={`navbar-burger burger ${this.state.burgerMenuCollapsed ? "is-active" : ""}`} aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                                            <span aria-hidden="true"></span>
-                                            <span aria-hidden="true"></span>
-                                            <span aria-hidden="true"></span>
-                                        </a>
-                                    </div>
-                                    <div id="navbarBasicExample" class={`navbar-menu ${this.state.burgerMenuCollapsed ? "is-active" : ""}`}>
-                                        <div class="navbar-start">
-                                            <a class="navbar-item" onClick={() => this.closeDrivers()}> Close Drivers </a>
-                                            <a class="navbar-item" onClick={() => this.closeRaces()}> Close Races </a>
-                                            <a class="navbar-item"> Info </a>
-                                        </div>
-                                    </div>
-                                </nav>
-                            </div>
+            <div id="mainContainer" className="container has-background-white-ter has-text-centered">
+                <nav class="navbar is-light is-transparent is-fixed-top" role="navigation" aria-label="main navigation">
+                    <div class="navbar-brand">
+                        <a class="navbar-item">
+                        {carIcon}
+                        </a>
+                        <a class="navbar-item" onClick={() => window.scrollTo(0,0)}>
+                        Formula Wow
+                        </a>
+                        <a>
+                        <img src={require("../images/info.png")} onClick={() => {this.pageInfoToggle()}} alt="loading error" style={{height:"25px", width:"25px"}}/>
+                        </a>
+                        <a role="button" onClick={() => this.burgerMenuClick()} class={`navbar-burger burger  ${this.state.burgerMenuCollapsed ? "is-active" : ""}`} aria-label="menu" aria-expanded="false" data-target="navbarBasic">
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div id="navbarBasic" class={`navbar-menu ${this.state.burgerMenuCollapsed ? "is-active" : ""}`}>
+                        <div class="navbar-start">
+                            <a class="navbar-item" onClick={() => this.closeDrivers()}> Close Drivers </a>
+                            <a class="navbar-item" onClick={() => this.closeRaces()}> Close Races </a>
+                            <a class="navbar-item"> Info </a>
                         </div>
                     </div>
-                </div>
-                
-                
-                {/* <div className="columns is-centered">
-                    <div class="column is-12">
-                        <div class="card">
-                            <div class="card-content">
-                                <nav id="desktopNav" class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-                                    <div class="navbar-brand">
-                                        <a class="navbar-item">
-                                        {carIcon} Think of a Cool Title
-                                        </a>
+                </nav>
+                <div id="myBox">
 
-                                        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                                        <span aria-hidden="true"></span>
-                                        <span aria-hidden="true"></span>
-                                        <span aria-hidden="true"></span>
-                                        </a>
-                                    </div>
+                    {pageInfo}
 
-                                    <div id="navbarBasicExample" class="navbar-menu">
-                                        <div class="navbar-start">
-                                        <div class="navbar-item has-dropdown is-hoverable">
-                                            <a class="navbar-link">
-                                            More
-                                            </a>
-
-                                            <div class="navbar-dropdown">
-                                            <a class="navbar-item">
-                                                About
-                                            </a>
-                                            <a class="navbar-item">
-                                                Jobs
-                                            </a>
-                                            <a class="navbar-item">
-                                                Contact
-                                            </a>
-                                            <a class="navbar-item">
-                                                Report an issue
-                                            </a>
-                                            </div>
-                                        </div>
-                                        </div>
-
-                                        <div class="navbar-end">
-                                        </div>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
-
-
-                {topTeamsInfo}
+                    {topTeamsInfo}
 
                 
-                {bottomTeamsInfo}
-
+                    {bottomTeamsInfo}
+                
 
                 
                     <div className="box">
@@ -713,13 +684,14 @@ class Home extends React.Component {
                         <ul>{driversAsListItems}</ul>
                     </div>
                 
-                <div className="box">
-                <div className="dropdown-trigger">
+                    <div className="box">
+                         <div className="dropdown-trigger">
                             <button className="button" onClick={() => this.handleRaceToggle()}>
-                            <span>Show Races</span>
+                                <span>Show Races</span>
                             </button>
                         </div> 
-                    {raceBreakDown}
+                        {raceBreakDown}
+                    </div>
                 </div>
             </div>
         );
