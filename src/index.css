@@ -37,12 +37,12 @@ max-width: 1328px;
 display:flex;
 justify-content:center;
 } */
-
-/* .navbar{
-display:flex;
-justify-content:center;
+/* @media screen and (min-width:1023px) {
+  .navbar{
+  display: flex;
+  justify-content: center;
+  }
 } */
-
 /* @media screen and (min-width:1023px) {
   .is-boxed{
     display: box;

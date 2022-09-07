@@ -289,8 +289,15 @@ class Home extends React.Component {
         
     }
     pageInfoToggle(){
-        this.setState({ pageInfoCollapsed: !this.state.pageInfoCollapsed});
+        this.setState({ pageInfoCollapsed: false});
+        this.setState({burgerMenuCollapsed: false})
+        window.scrollTo(0,0)
+        console.log("info clicked", this.state.pageInfoCollapsed);
     };
+
+    pageInfoClose(){
+        this.setState({pageInfoCollapsed: true})
+    }
 
 
     render() {
@@ -307,7 +314,90 @@ class Home extends React.Component {
         var pointsKey ="";
         var pageInfo ="";
         var carIcon = <img src={require("../images/car.gif")} onClick={() => this.carClick()} onMouseLeave={() => this.mouseLeave()} width="136" height="50"></img> 
-        
+        // delete ! to get info working
+        if(this.state.pageInfoCollapsed){
+            pageInfo = ""
+        }
+        else{
+            pageInfo = 
+            <div class="columns is-centered">
+                <div class="column is-6 ">
+                    <article class="message is-dark">
+                    <div class="message-header">
+                    <p>Info</p>
+                    <button onClick={() => this.pageInfoClose()} class="delete" aria-label="delete"></button>
+                    </div>
+                    <div class="message-body">
+                    <strong>About</strong>
+                    <br></br>
+                    <br></br>
+                    This is an app for me and some friends to track our fantasy Formula One Season. It pulls its data from the ergast.com motor racing API, has a few tables to help us interpret the data, and adds our scores when race data is updated. We created 2 leagues this season; a top league comprised of the front runner teams (Ferrari, Mercedes, and Red Bull) and a bottom bracket of all other teams. We started late this season on the 10th race, that’s just when we thought to make a league! Let's talk scoring.
+                    <br></br>
+                    <br></br>
+                    <strong>Scoring</strong>
+                    <br></br>
+                    <br></br>
+                        <div class="columns is-mobile">
+                            <div class="column is-half">
+                                <table class="table is-narrow is-bordered is-striped is-hoverable">
+                                    <thead>
+                                        <th>place</th>
+                                        <th>points</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>25</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>18</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>15</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>12</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>10</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>8</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td>6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>1</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>    
+                            <div class="column">
+                            This score chart represents possible scores for both <strong>Qualifying</strong> and the <strong>Grand Prix</strong>, there is also one possible extra point for fastest lap during the Grand Prix <strong>only</strong>. The maximum a driver could score in one weekend is 51 points. A realistic example we will look at is Lewis Hamilton’s score from the Silverstone Circuit race weekend. He qualified <strong>5th</strong> resulting in <strong>10 points</strong> on race day he finished <strong>3rd</strong> resulting in <strong>16 points</strong>. That weekend he was awarded a total of <strong>26 points</strong>.
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+        }
+
         if(this.state.carGifGo){
             carIcon = <img src={require("../images/car.gif")} onClick={() => this.carClick()} onMouseLeave={() => this.mouseLeave()} width="136" height="50"></img>
             console.log('go go go');
@@ -642,9 +732,6 @@ class Home extends React.Component {
                         <a class="navbar-item" onClick={() => window.scrollTo(0,0)}>
                         Formula Wow
                         </a>
-                        <a>
-                        <img src={require("../images/info.png")} onClick={() => {this.pageInfoToggle()}} alt="loading error" style={{height:"25px", width:"25px"}}/>
-                        </a>
                         <a role="button" onClick={() => this.burgerMenuClick()} class={`navbar-burger burger  ${this.state.burgerMenuCollapsed ? "is-active" : ""}`} aria-label="menu" aria-expanded="false" data-target="navbarBasic">
                             <span aria-hidden="true"></span>
                             <span aria-hidden="true"></span>
@@ -655,7 +742,7 @@ class Home extends React.Component {
                         <div class="navbar-start">
                             <a class="navbar-item" onClick={() => this.closeDrivers()}> Close Drivers </a>
                             <a class="navbar-item" onClick={() => this.closeRaces()}> Close Races </a>
-                            <a class="navbar-item"> Info </a>
+                            <a class="navbar-item" onClick={() => {this.pageInfoToggle()}}> Info </a>
                         </div>
                     </div>
                 </nav>
