@@ -85,7 +85,6 @@ async function main(){
     // console.log(global.__basedir);
     // console.log(myImages);
     addRacesToDrivers();
-    sendInfo();
     // this is a 10 second interval used for testing code
     // setInterval(checkDate, 10000);
     // this is a 30 mins interval to check if its sunday. *Scheduled jobs.
@@ -276,16 +275,27 @@ function addRacesToDrivers(){
     });
 }
 
-function sendInfo(){
-    app.get('/myStuff', (req, res) => {
-        res.json(myStuff);
-      });
-}
+console.log(process.env);
+
+app.get('/myStuff', (req, res) => {
+    console.log("got here");
+    console.log(req);
+    res.json(myStuff);
+});
+
 
 app.listen(port, () => {
     console.log('Server Listening on port', port);
-  });
+});
 
+// docker build -t {image name} THIS BUILDS THE THING
+// docker run -p port:port {image name} THIS RUN
+// docker rm -f $(docker ps -a -q) YOU CANT US ^C for some reason
+
+// next 3 steps
+// 1 container front end. Create Dockerfile and Dockerignore (backend folder too)
+// 2 Run front end containter and  navigate to UI in browser get something to show up
+// 3 get front end container should fetch data from backend container (use differnt IP http://127.0.0.1/)
 
 
 

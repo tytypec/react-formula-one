@@ -3,6 +3,7 @@ import axios from 'axios';
 import React from "react";
 import 'bulma/css/bulma.min.css';
 import '../index.css'
+const API_URL = process.env.REACT_APP_DOMAIN_URL ? process.env.REACT_APP_DOMAIN_URL : "http://127.0.0.1:3001"
 
 class Home extends React.Component {
 
@@ -183,7 +184,9 @@ class Home extends React.Component {
 
 
     async backend(){
-        var backendResponse = await fetch('http://localhost:3001/myStuff');
+        // var backendResponse = await fetch('http://localhost:3001/myStuff');
+        var fullURL = API_URL + "/myStuff"
+        var backendResponse = await fetch(fullURL);
         var backendData = await backendResponse.json();
         // console.log("backdata", backendData);
         // this.setState ({backendInfo: backendData})
