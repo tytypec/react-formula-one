@@ -9,6 +9,7 @@ import { log } from "console";
 
 const app = express();
 const port = 3001;
+const API_URL = process.env.DOMAIN_URL ? process.env.DOMAIN_URL : "http://127.0.0.1:3001"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -80,11 +81,12 @@ var myStuff = {
 }
 
 async function main(){
-    await getRaces();
     await getDrivers();
+    await getRaces();
+    
     // console.log(global.__basedir);
     // console.log(myImages);
-    addRacesToDrivers();
+    addRacesToDrivers(myStuff.seasonDrivers,myStuff.seasonRaces); //trying to add this to the bottom of getRaces() so its called when setInterval is envoked. That didnt work 
     // this is a 10 second interval used for testing code
     // setInterval(checkDate, 10000);
     // this is a 30 mins interval to check if its sunday. *Scheduled jobs.
@@ -94,20 +96,20 @@ async function main(){
 main();
 
 
-workingFilePaths.forEach((element, index) => {
-    // var imageURL = repo.folderPath() + element
-    // var imageURL = 'http://localhost:3000/images/items/' + element
-    var imageURL = 'http://localhost:3001/image/' + element
-    // var imageName = element.replace(/\.[^/.]+$/, "");
-    var imageName = element.replace(".png", "");
-    var thing = {
-        image: imageName,
-        url : imageURL,
-        id: index
-    }
-    myStuff.images.push(thing);
-    // console.log(thing);
-})
+// workingFilePaths.forEach((element, index) => {
+//     // var imageURL = repo.folderPath() + element
+//     // var imageURL = 'http://localhost:3000/images/items/' + element
+//     var imageURL = 'http://localhost:3001/image/' + element
+//     // var imageName = element.replace(/\.[^/.]+$/, "");
+//     var imageName = element.replace(".png", "");
+//     var thing = {
+//         image: imageName,
+//         url : imageURL,
+//         id: index
+//     }
+//     myStuff.images.push(thing);
+//     // console.log(thing);
+// })
 
 app.get("/images", (req, res) => {
     res.json(images);
@@ -217,7 +219,8 @@ async function getDrivers() {
 
     drivers = drivers.reduce((memo, driver) => {
         if (driver.code === "HUL") { return memo;}
-        driver.imageUrl = `http://localhost:3001/image/${driver.code}.png`;
+        // driver.imageUrl = `http://localhost:3001/image/${driver.code}.png`;
+        driver.imageUrl = API_URL + `/image/${driver.code}.png`;
         driver.results = [];
         memo.push(driver)
         return memo;
@@ -231,24 +234,26 @@ async function getDrivers() {
 function addRacesToDrivers(){
     const races = myStuff.seasonRaces;
     const drivers = myStuff.seasonDrivers;
+    console.log(races.length);
+    console.log(drivers.length);
     // console.log("SEASON RACES", myStuff)
     races.forEach(race => {
         // console.log("RACE",race);
         race.Results.forEach(result => {
-                // checks against scoreSheet to assign qualifying points
-                myStuff.scoreSheet.forEach(position => {
-                    if(parseInt(result.grid) === position.position){
-                        result.qualifyingPoints = position.points;
-                        // var weekendPoints = position.points + result.Results.points;
-                    }
-                    else if(parseInt(result.grid) >= 11 || parseInt(result.grid) === 0 || parseInt(result.grid) === "R"){
-                        result.qualifyingPoints = 0;   
-                    }
-                    // else{
-                    //     result.qualifyingPoints = 0;
-                    // }
-                });
-                result.weekendPoints = parseInt(result.points) + result.qualifyingPoints;
+            // checks against scoreSheet to assign qualifying points
+            myStuff.scoreSheet.forEach(position => {
+                if(parseInt(result.grid) === position.position){
+                    result.qualifyingPoints = position.points;
+                    // var weekendPoints = position.points + result.Results.points;
+                }
+                else if(parseInt(result.grid) >= 11 || parseInt(result.grid) === 0 || parseInt(result.grid) === "R"){
+                    result.qualifyingPoints = 0;   
+                }
+                // else{
+                //     result.qualifyingPoints = 0;
+                // }
+            });
+            result.weekendPoints = parseInt(result.points) + result.qualifyingPoints;
 
             drivers.forEach(driver => {
                 if(result.Driver.code === driver.code && driver.results.includes(result) === false){
@@ -275,11 +280,10 @@ function addRacesToDrivers(){
     });
 }
 
-console.log(process.env);
 
 app.get('/myStuff', (req, res) => {
     console.log("got here");
-    console.log(req);
+    // console.log(req);
     res.json(myStuff);
 });
 
@@ -291,6 +295,9 @@ app.listen(port, () => {
 // docker build -t {image name} THIS BUILDS THE THING
 // docker run -p port:port {image name} THIS RUN
 // docker rm -f $(docker ps -a -q) YOU CANT US ^C for some reason
+// 
+// docker run -p 80:3000 --env-file ./myEnv typecora/formula-front
+// docker run -p 3001:3001 --env-file ./myEnv typecora/formula-back
 
 // next 3 steps
 // 1 container front end. Create Dockerfile and Dockerignore (backend folder too)

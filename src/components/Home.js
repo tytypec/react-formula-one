@@ -3,7 +3,8 @@ import axios from 'axios';
 import React from "react";
 import 'bulma/css/bulma.min.css';
 import '../index.css'
-const API_URL = process.env.REACT_APP_DOMAIN_URL ? process.env.REACT_APP_DOMAIN_URL : "http://127.0.0.1:3001"
+// const API_URL = process.env.REACT_APP_DOMAIN_URL ? process.env.REACT_APP_DOMAIN_URL : "http://127.0.0.1:3001"
+const API_URL = "http://localhost:3001"
 
 class Home extends React.Component {
 
