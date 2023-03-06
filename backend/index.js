@@ -9,7 +9,7 @@ import { log } from "console";
 
 const app = express();
 const port = 3001;
-const API_URL = process.env.DOMAIN_URL ? process.env.DOMAIN_URL : "http://127.0.0.1:3001"
+const API_URL = process.env.DOMAIN_URL ? process.env.DOMAIN_URL : "http://localhost:3001"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
