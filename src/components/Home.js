@@ -8,51 +8,136 @@ const API_URL = "http://localhost:3001"
 
 class Home extends React.Component {
 
+    // 2022 Array
+    // myStuff = {
+    //     seasonRaces: [],
+    //     amountOfRaces: 23,
+    //     currentRound: 10,
+    //     leagueIdentificationNumber: 1,
+    //     topTeams: [
+    //         {
+    //             name: "Cotton Candy Dan",
+    //             teamTotalPoints: 0,
+    //             teamDriverInfo: [],
+    //             driverCodes: ["PER","VER"],
+    //         },
+    //         {
+    //             name: "Ty's Flyin Tyres",
+    //             teamTotalPoints: 0,
+    //             teamDriverInfo: [],
+    //             driverCodes: ["HAM","LEC"],
+    //         },
+    //         {
+    //             name: "Kayla's Peanut Patrol",
+    //             teamTotalPoints: 0,
+    //             teamDriverInfo: [],
+    //             driverCodes: ["RUS","SAI"],
+    //         },
+    //     ],
+    //     bottomTeams: [
+    //         {
+    //             name: "Dan's Back Up Boys",
+    //             teamTotalPoints: 0,
+    //             teamDriverInfo: [],
+    //             driverCodes: ["NOR","VET"],
+    //         },
+    //         {
+    //             name: "First In Our Hearts",
+    //             teamTotalPoints: 0,
+    //             teamDriverInfo: [],
+    //             driverCodes: ["BOT","RIC"],
+    //         },
+    //         {
+    //             name: "They Made Me Pick Slow People",
+    //             teamTotalPoints: 0,
+    //             teamDriverInfo: [],
+    //             driverCodes: ["ALO","TSU"],
+    //         },
+    //     ],
+
+    //     scoreSheet: [
+    //         {
+    //             position: 1,
+    //             points: 25
+    //         },
+    //         {
+    //             position: 2,
+    //             points: 18
+    //         },
+    //         {
+    //             position: 3,
+    //             points: 15
+    //         },
+    //         {
+    //             position: 4,
+    //             points: 12
+    //         },
+    //         {
+    //             position: 5,
+    //             points: 10
+    //         },
+    //         {
+    //             position: 6,
+    //             points: 8
+    //         },
+    //         {
+    //             position: 7,
+    //             points: 6
+    //         },
+    //         {
+    //             position: 8,
+    //             points: 4
+    //         },
+    //         {
+    //             position: 9,
+    //             points: 2
+    //         },
+    //         {
+    //             position: 10,
+    //             points: 1
+    //         },
+    //     ]
+    // };
+
     myStuff = {
         seasonRaces: [],
         amountOfRaces: 23,
-        currentRound: 10,
+        currentRound: 0,
         leagueIdentificationNumber: 1,
+        seasonIdentificationNumber:23,
         topTeams: [
             {
-                name: "Cotton Candy Dan",
+                name: "So Much Pressure",
                 teamTotalPoints: 0,
                 teamDriverInfo: [],
-                driverCodes: ["PER","VER"],
+                driverCodes: ["LEC","MAG"],
             },
             {
-                name: "Ty's Flyin Tyres",
+                name: "K-Munnie",
                 teamTotalPoints: 0,
                 teamDriverInfo: [],
-                driverCodes: ["HAM","LEC"],
+                driverCodes: ["VER","DEV"],
             },
             {
-                name: "Kayla's Peanut Patrol",
+                name: "Daisy's Dukes",
                 teamTotalPoints: 0,
                 teamDriverInfo: [],
-                driverCodes: ["RUS","SAI"],
+                driverCodes: ["PER","NOR"],
+            },
+            {
+                name: "de Vries do Well",
+                teamTotalPoints: 0,
+                teamDriverInfo: [],
+                driverCodes: ["SAI","BOT"],
+            },
+            {
+                name: "ClamDaddyT",
+                teamTotalPoints: 0,
+                teamDriverInfo: [],
+                driverCodes: ["HAM","ALO"],
             },
         ],
-        bottomTeams: [
-            {
-                name: "Dan's Back Up Boys",
-                teamTotalPoints: 0,
-                teamDriverInfo: [],
-                driverCodes: ["NOR","VET"],
-            },
-            {
-                name: "First In Our Hearts",
-                teamTotalPoints: 0,
-                teamDriverInfo: [],
-                driverCodes: ["BOT","RIC"],
-            },
-            {
-                name: "They Made Me Pick Slow People",
-                teamTotalPoints: 0,
-                teamDriverInfo: [],
-                driverCodes: ["ALO","TSU"],
-            },
-        ],
+
 
         scoreSheet: [
             {
@@ -106,19 +191,16 @@ class Home extends React.Component {
             driverInfo: [],
             currentRound: 11,
             topTeams: [],
-            bottomTeams: [],
             pageClicks: 0,
             teamsFetched: false,
             imagesLoaded: false,
             driverListCollapsed: true,
             raceListCollapsed: true,
             topTeamDisplayCollapsed: true,
-            bottomTeamDisplayCollapsed: true,
             burgerMenuCollapsed: false,
             carGifGo: false,
             pageInfoCollapsed: true,
             activeTopTeam: [],
-            activeBottomTeam: [],
         }
     }
 
@@ -126,9 +208,7 @@ class Home extends React.Component {
         await this.backend();
         this.imageLoader(this.state.backendInfo.seasonDrivers);
         this.addDriversToTeams(this.myStuff.topTeams);
-        this.addDriversToTeams(this.myStuff.bottomTeams);
         this.sumTeamPoints(this.myStuff.topTeams, this.state.topTeams);
-        this.sumTeamPoints(this.myStuff.bottomTeams, this.state.bottomTeams);
         this.navbarJustWork();
         console.log("STATE", this.state);
         console.log("MYSTUFF", this.myStuff);
@@ -238,6 +318,12 @@ class Home extends React.Component {
             if(driver.code === team[2].driverCodes[0] || driver.code === team[2].driverCodes[1]){
                 team[2].teamDriverInfo.push(driver);
             }
+            if(driver.code === team[3].driverCodes[0] || driver.code === team[3].driverCodes[1]){
+                team[3].teamDriverInfo.push(driver);
+            }
+            if(driver.code === team[4].driverCodes[0] || driver.code === team[4].driverCodes[1]){
+                team[4].teamDriverInfo.push(driver);
+            }
         });
     }
 
@@ -256,13 +342,6 @@ class Home extends React.Component {
         if(this.state.activeTopTeam.length !== 0){
         this.setState({ topTeamDisplayCollapsed: !this.state.topTeamDisplayCollapsed});
         console.log("clicked on button ", this.state.activeTopTeam);
-        }
-    }
-    handleBottomDriversToggle(team){
-        this.state.activeBottomTeam = team;
-        if(this.state.activeBottomTeam.length !== 0){
-        this.setState({ bottomTeamDisplayCollapsed: !this.state.bottomTeamDisplayCollapsed});
-        console.log("clicked on button ", this.state.activeBottomTeam);
         }
     }
 
@@ -307,12 +386,9 @@ class Home extends React.Component {
     render() {
         var driversAsListItems = "";
         var topTeamScores = "";
-        var bottomTeamScores = "";
         var raceBreakDown = "";
         var topTeamsInfo = "";
-        var bottomTeamsInfo ="";
         var activeTeamInfo = "";
-        var bottomActiveTeamInfo = "";
         var currentTeamInfo ="";
         var currentTeam = "";
         var pointsKey ="";
@@ -416,7 +492,6 @@ class Home extends React.Component {
 
             driversAsListItems = "Loading...";
             topTeamScores = "";
-            bottomTeamScores = "";
             raceBreakDown = "";
 
         }
@@ -597,89 +672,6 @@ class Home extends React.Component {
                     </div>
                 </div>
             </div> 
-            
-            // 
-            if(!this.state.bottomTeamDisplayCollapsed){
-                currentTeam = this.state.activeBottomTeam
-                bottomActiveTeamInfo = currentTeam.teamDriverInfo.map((driver) => {
-                    var imageSource = driver.imageUrl ? driver.imageUrl : "";
-
-                    return( 
-
-                        <div class="box is-full">
-                        <div class="media">
-                            <div class="media-left">
-                                <figure class="image is-64x64">
-                                <img src={imageSource} alt="didnt load" />
-                                </figure>
-                                <div class="media">
-
-                                </div>
-                            </div>
-
-                            <div class="container is-fluid">
-                                <nav class="level is-mobile">
-                                    <div class="level-item has-text-centered">     
-                                        <div>                                  
-                                            <p class="title is-5">{driver.familyName}</p>
-                                            <br></br>
-                                            <p class="subtitle is-5">{driver.nationality}</p>
-                                        </div> 
-                                    </div>
-                                    <div class="level-item has-text-centered">
-                                        <div>
-                                            <p class="title is-5">{driver.construction}</p>
-                                            <br></br>
-                                            <p class="subtitle is-5">{driver.seasonPoints} pts</p>
-                                        </div>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>    
-                    </div>
-
-                    )
-                })
-
-            }
-
-            bottomTeamScores = this.myStuff.bottomTeams.map((team) => {  
-                // var teamName = team.name ? team.name : "";
-                return <tr key={team.name}><td>{team.name}</td> <td>{team.teamTotalPoints}</td><td><img src={require("../images/info.png")} onClick={() => {this.handleBottomDriversToggle(team)}} alt="loading error" style={{height:"25px", width:"25px"}} /></td> </tr>
-            })
-
-            bottomTeamsInfo = 
-            <div className="box">
-                <div class="columns is-centered">
-                    <div className="title is-6 column">Bottom Constructors Score</div>
-                </div>
-
-                <div class="columns is-centered">
-                    <div class="column is-6">
-                        <table class="score-board table is-bordered is-hoverable">
-                        <thead class="has-background-danger-dark">
-                            <tr>
-                            <th>Team</th>
-                            <th>Score</th>
-                            <th>Info</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {bottomTeamScores}
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="columns is-centered">
-                    <div class="title column is-6">{currentTeam.name}</div>
-                </div>
-                <div class="columns is-centered">
-                    <div class="column is-6">
-                      {bottomActiveTeamInfo}
-                    </div>
-                </div>
-            </div>
 
 
             if(!this.state.raceListCollapsed){
@@ -756,8 +748,6 @@ class Home extends React.Component {
 
                     {topTeamsInfo}
 
-                
-                    {bottomTeamsInfo}
                 
 
                 

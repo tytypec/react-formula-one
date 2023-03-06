@@ -25,16 +25,73 @@ var workingFilePaths = repo.readImageFileNames();
 // console.log(workingFilePaths);
 var images = [];
 
+// 2022 Season Array
+// var myStuff = {
+//     seasonRaces: [],
+//     seasonDrivers: [],
+//     amountOfRaces: 23,
+//     seasonStartingRound: 10,
+//     getRacesConfig:{
+//         frequency: 1800000,  
+//         // frequency: 11800,  
+//     }, 
+//     leagueIdentificationNumber: 1,
+//     images: [],
+//     scoreSheet: [
+//         {
+//             position: 1,
+//             points: 25
+//         },
+//         {
+//             position: 2,
+//             points: 18
+//         },
+//         {
+//             position: 3,
+//             points: 15
+//         },
+//         {
+//             position: 4,
+//             points: 12
+//         },
+//         {
+//             position: 5,
+//             points: 10
+//         },
+//         {
+//             position: 6,
+//             points: 8
+//         },
+//         {
+//             position: 7,
+//             points: 6
+//         },
+//         {
+//             position: 8,
+//             points: 4
+//         },
+//         {
+//             position: 9,
+//             points: 2
+//         },
+//         {
+//             position: 10,
+//             points: 1
+//         },
+//     ]
+// }
+
 var myStuff = {
     seasonRaces: [],
     seasonDrivers: [],
     amountOfRaces: 23,
-    seasonStartingRound: 10,
+    seasonStartingRound: 1,
     getRacesConfig:{
         frequency: 1800000,  
         // frequency: 11800,  
     }, 
     leagueIdentificationNumber: 1,
+    seasonIdentificationNumber:23,
     images: [],
     scoreSheet: [
         {
@@ -161,9 +218,10 @@ function latestRaceWeek(){
 async function getRaces() {
     var currentRace = latestRaceWeek();
     var found = true;
-
+    // https://ergast.com/api/f1/2023 2023 F1 API locations
+    // https://ergast.com/api/f1/2023/1/results.json (this is 2023 F1 adress for first race)
     while (found) {
-        const raceURL = `http://ergast.com/api/f1/2022/${currentRace}/results.json`
+        const raceURL = `http://ergast.com/api/f1/2023/${currentRace}/results.json`
         try{
         var raceResponse = await fetch(raceURL);}
         catch(e){
@@ -211,7 +269,7 @@ async function getRaces() {
 
 async function getDrivers() {
     // console.log("inside getDrivers");
-    const driverURL = `https://ergast.com/api/f1/2022/drivers.json`
+    const driverURL = `https://ergast.com/api/f1/2023/drivers.json`
     var driverResponse = await fetch(driverURL);
     var fullDriverDetail = await driverResponse.json();
     var drivers = fullDriverDetail.MRData.DriverTable.Drivers;
